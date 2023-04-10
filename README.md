@@ -1,28 +1,10 @@
-# IOT-Auto-Maker
----
+# IOT AUTO MAKER 
 
-### 가상환경 설정
+## 목표
+- IoT 소스 자동 생성용 백엔드 서버 구축
+### 폴더 구조
+- [backend](/backend/README.md) : FastAPI를 사용한 데이테베이스 API
+- [documents](/documents/README.md) : 문서 작업
+- documents/images : 문서에 삽입되는 이미지 폴더
 
-1. 가상환경 생성
 
-```
-$ python -m venv .venv
-```
-
-2. 가상환경 활성화
-
-```
-$ . .venv/bin/activate
-```
-
-3. requirements 설치
-
-```
-$ pip3 install -r requirements.txt
-```
-
-### fast api 실행
-
-```
-$ uvicorn src.main:app --reload 
-```
