@@ -1,0 +1,236 @@
+direction: right
+
+customer: 고객 {
+  style.font-size: 30
+  A: "" {
+    icon: https://icons.terrastruct.com/dev%2Fchrome.svg
+    shape: image
+  }
+  B: "" {
+    icon: https://icons.terrastruct.com/dev%2Fsafari.svg
+    shape: image
+  }
+  C: "" {
+    icon: https://icons.terrastruct.com/dev%2Fie.svg
+    shape: image
+  }
+
+  admin: 관리자 {
+    icon: https://icons.terrastruct.com/essentials%2F365-user.svg
+    shape: image
+    style.font-size: 30
+  }
+}
+
+loadBalancer1: "Load\nBalancer" {
+  icon: https://icons.terrastruct.com/gcp%2FProducts%20and%20services%2FNetworking%2FCloud%20Load%20Balancing.svg
+  shape: image
+  style.font-size: 30
+}
+
+loadBalancer2: "Load\nBalancer" {
+  icon: https://icons.terrastruct.com/gcp%2FProducts%20and%20services%2FNetworking%2FCloud%20Load%20Balancing.svg
+  shape: image
+  style.font-size: 30
+}
+
+customer <-> loadBalancer1
+customer <-> loadBalancer2
+
+googleCloud: Google Cloud Platform {
+  direction: down
+  style.font-size: 80
+  adminService: Admin Service {
+    style.font-size: 30
+    A: 로그 {
+      icon: https://icons.terrastruct.com/azure%2FAnalytics%20Service%20Color%2FLog%20Analytics%20Workspaces.svg
+      shape: image
+      style.font-size: 30
+    }
+    B: 결제 서비스 {
+      icon: https://icons.terrastruct.com/azure%2FManagement%20and%20Governance%20Service%20Color%2FCost%20Management%20Billing.svg
+      shape: image
+      style.font-size: 30
+    }
+    C: 어드민 대시보드 {
+      icon: https://icons.terrastruct.com/tech%2Fbrowser-2.svg
+      shape: image
+      style.font-size: 30
+    }
+  }
+  utilityService: "Utility Service" {
+    style.font-size: 30
+    A: 사용자 대시보드 {
+      icon: https://icons.terrastruct.com/tech%2Fbrowser-2.svg
+      shape: image
+      style.font-size: 30
+    }
+    B: Report {
+      icon: https://icons.terrastruct.com/essentials%2F001-analytics.svg
+      shape: image
+      style.font-size: 30
+    }
+    C: Price & Measure {
+      icon: https://icons.terrastruct.com/aws%2FAWS%20Cost%20Management%2FAWS-Cost-and-Usage-Report.svg
+      shape: image
+      style.font-size: 30
+    }
+  }
+
+  backendService: Backend Service {
+    style.font-size: 30
+    A: Firestore\n실시간서버 {
+      icon: https://icons.terrastruct.com/gcp%2FProducts%20and%20services%2FDatabases%2FCloud%20Firestore.svg
+      shape: image
+      style.font-size: 30
+    }
+    B1: 소스 생성 API {
+      icon: https://icons.terrastruct.com/gcp%2FProducts%20and%20services%2FCompute%2FCloud%20Functions.svg
+      shape: image
+      style.font-size: 30
+    }
+    B2: 관리자 대시보드 API {
+      icon: https://icons.terrastruct.com/gcp%2FProducts%20and%20services%2FCompute%2FCloud%20Functions.svg
+      shape: image
+      style.font-size: 30
+    }
+    B3: 클라우드 인스탄스 관리자 API {
+      icon: https://icons.terrastruct.com/gcp%2FProducts%20and%20services%2FCompute%2FCloud%20Functions.svg
+      shape: image
+      style.font-size: 30
+    }
+
+    C: 소스 생성,관리 {
+      icon: https://icons.terrastruct.com/aws%2FDatabase%2FAmazon-RDS_MariaDB_instance_light-bg.svg
+      shape: image
+      style.font-size: 30
+    }
+    D: 어드민 대시보드\n결제, 로그 {
+      icon: https://icons.terrastruct.com/aws%2FDatabase%2FAmazon-RDS_MariaDB_instance_light-bg.svg
+      shape: image
+      style.font-size: 30
+    }
+  }
+
+  edgeService: 소스 생성, 인스탄스 생성 엔진 {
+    style.font-size: 30
+    A1: 소스 생성 엔진 (유료) {
+      icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+      shape: image
+      style.font-size: 30
+    }
+    A2: 소스 생성 엔진 (무료) {
+      icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+      shape: image
+      style.font-size: 30
+    }
+    B1:앱엔진 배포\n엔진 (유료) {
+      icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+      shape: image
+      style.font-size: 30
+    }
+    B2: VM 배포\n엔진 (유료) {
+      icon: https://icons.terrastruct.com/dev%2Fdocker.svg
+      shape: image
+      style.font-size: 30
+    }
+  }
+
+  bucket1: File Storage {
+    style.font-size: 30
+    A: 비공개 소스(유료) {
+      icon: https://icons.terrastruct.com/azure%2FSecurity%20Service%20Color%2FKey%20Vaults.svg
+      shape: image
+      width: 100
+      height: 100
+      style.font-size: 30
+    }
+  }
+
+  bucket2: File Storage {
+    style.font-size: 30
+    A: 공개 소스 (무료) {
+      icon: https://icons.terrastruct.com/dev%2Fsourcetree.svg
+      shape: image
+      width: 100
+      height: 100
+      style.font-size: 30
+    }
+  }
+
+  appEngine: 앱엔진 {
+    style.font-size: 30
+    A: 클라우드 실행 (유료) {
+      icon: https://icons.terrastruct.com/gcp%2FProducts%20and%20services%2FCompute%2FApp%20Engine.svg
+      shape: image
+      width: 100
+      height: 100
+      style.font-size: 30
+    }
+  }
+
+  VM: VM {
+    style.font-size: 30
+    A: 클라우드 실행 (유료) {
+      icon: https://icons.terrastruct.com/azure%2FCompute%20Service%20Color%2FVM%2FVM.svg
+      shape: image
+      width: 100
+      height: 100
+      style.font-size: 30
+    }
+  }
+
+  adminService <-> backendService
+  utilityService <-> backendService
+  backendService <-> edgeService
+  backendService <-> edgeService
+  edgeService -> bucket1
+  edgeService -> bucket2
+  edgeService -> appEngine
+  edgeService -> VM
+}
+
+git: GIT 공개 {
+  icon: https://icons.terrastruct.com/social%2F039-github.svg
+  shape: image
+  style.font-size: 30
+}
+
+users1: 외부 개발자 {
+  icon: https://icons.terrastruct.com/aws%2F_General%2FUsers_light-bg.svg
+  shape: image
+  style.font-size: 30
+}
+
+users2: 외부 개발자 {
+  icon: https://icons.terrastruct.com/aws%2F_General%2FUsers_light-bg.svg
+  shape: image
+  style.font-size: 30
+}
+
+users3: 외부 개발자 {
+  icon: https://icons.terrastruct.com/aws%2F_General%2FUsers_light-bg.svg
+  shape: image
+  style.font-size: 30
+}
+
+sensor1: 센서 {
+  icon: https://icons.terrastruct.com/aws%2FInternet%20of%20Things%2FIoT_Sensor_light-bg.svg
+  shape: image
+  style.font-size: 30
+}
+sensor2: 센서 {
+  icon: https://icons.terrastruct.com/aws%2FInternet%20of%20Things%2FIoT_Sensor_light-bg.svg
+  shape: image
+  style.font-size: 30
+}
+
+loadBalancer1 -> googleCloud.adminService
+loadBalancer2 -> googleCloud.utilityService
+
+googleCloud.bucket2 -> git
+
+# direction: right
+git -> users1
+googleCloud.appEngine <-> sensor1 <-> users2
+googleCloud.VM <-> sensor2 <-> users3
