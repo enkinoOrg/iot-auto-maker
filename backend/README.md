@@ -26,3 +26,18 @@ $ pip3 install -r requirements.txt
 ```
 $ uvicorn src.main:app --reload 
 ```
+
+- 작업 테이블 생성
+    ```
+    ### Request Body
+    {   
+        "tableName": "string",
+        "veesion":""
+        "data": [
+            {
+                id: 0,
+                fieldName: "",
+            }
+        ]
+    }
+    ```
