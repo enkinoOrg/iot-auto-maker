@@ -32,12 +32,11 @@ $ uvicorn src.main:app --reload
     ### Request Body
     {   
         "tableName": "string",
-        "version":""
+        "veesion":""
         "data": [
             {
                 id: 0,
                 fieldName: "",
-                ...
             }
         ]
     }
