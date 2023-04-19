@@ -36,9 +36,15 @@ async def root(projectModel: ProjectModel):
 
 # python 파일 작성 함수
 def make_model(table_list):
+
+    # models.py생성
     print("=== make model start ===")
-    copy_file_content('modelSample/model.txt', 'modelSample/model.py')
+    copy_file_content('modelSample/model.txt', 'api_result/src/app/api/models.py')
     print("=== copy end ===")
     for table in table_list:
         print(f'{table["name"]}: {table["type"]}')
-        append_text_to_file('modelSample/model.py', f'\t{table["name"]}: {table["type"]}\n')
+        append_text_to_file('api_result/src/app/api/models.py', f'\t{table["name"]}: {table["type"]}\n')
+
+    # crud.py 
+    print("=== make crud start ===")
+    copy_file_content('modelSample/crud.txt', 'api_result/src/app/api/crud.py')
