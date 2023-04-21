@@ -12,3 +12,4 @@ async def get_all():
 async def delete(id: int):
     query = schema_name.delete().where(id == table_name.c.id)
     return await database.execute(query=query)
+

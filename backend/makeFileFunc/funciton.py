@@ -12,3 +12,10 @@ def copy_file_content(source_path: str, target_path: str):
 def append_text_to_file(file_path: str, text: str):
     with open(file_path, 'a') as f:
         f.write(text)
+
+def replace_word_in_file(file_path: str, word: str, replace_word: str):
+    with open(file_path, 'r') as f:
+        content = f.read()
+        content = content.replace(word, replace_word)
+    with open(file_path, 'w') as f:
+        f.write(content)

@@ -1,10 +1,14 @@
+
+# fastapi
 from fastapi import FastAPI, Body
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from app.models import ProjectModel
 from makeFileFunc.funciton import copy_file_content
 from makeFileFunc.funciton import append_text_to_file
-from makeFileFunc.funciton import replace_word_in_file
-from app.models import ProjectModel
+
+## test용
+import re
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -23,43 +27,37 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
+
     return {"message": "Hello World"}
 
 @app.post("/template")
 async def root(projectModel: ProjectModel):
-    project_name = projectModel.projectName
-    project_type = projectModel.dbType
-    project_explain = projectModel.explain
-    table_list = projectModel.tableName
+    copy_file_content('modelSample/test2.txt', 'api_result/src/app/api/test2.py')
+    return projectModel
 
-    # models.py
+
+@app.post("/template2")
+async def root(projectModel: ProjectModel):
+    print(projectModel)
+    table_list = projectModel.tableName
+    make_model(table_list)
+    # db에 테이블을 만드는 작업
+    # template body
+    # 사용자 정보랑, version
+    return projectModel
+
+
+# python 파일 작성 함수
+def make_model(table_list):
+
+    # models.py생성
     print("=== make model start ===")
     copy_file_content('modelSample/model.txt', 'api_result/src/app/api/models.py')
+    print("=== copy end ===")
     for table in table_list:
         print(f'{table["name"]}: {table["type"]}')
         append_text_to_file('api_result/src/app/api/models.py', f'\t{table["name"]}: {table["type"]}\n')
-    print("=== copy end ===")
 
-
-    # crud.py make
-    # create부터
+    # crud.py 
     print("=== make crud start ===")
     copy_file_content('modelSample/crud.txt', 'api_result/src/app/api/crud.py')
-    content = create_content_make(table_list)
-
-    # create.py 생성
-    copy_file_content('modelSample2/create.txt', 'modelSample2/create.py')
-
-    print (content)
-
-    # content 내용추가
-    print("=== content 내용추가 ===")
-    replace_word_in_file('modelSample2/create.py', 'query_content', content)
-    return projectModel
-
-def create_content_make(table_list):
-    content = ''
-    for table in table_list:
-        print(f'{table["name"]}: {table["type"]}')
-        content += f'{table["name"]}=schema_name.{table["name"]}\n'
-    return content
