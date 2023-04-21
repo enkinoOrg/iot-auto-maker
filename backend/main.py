@@ -61,5 +61,5 @@ def create_content_make(table_list):
     content = ''
     for table in table_list:
         print(f'{table["name"]}: {table["type"]}')
-        content += f'{table["name"]}=schema_name.{table["name"]}\n'
+        content += f'{table["name"]}=schema_name.{table["name"]}\n \t\t'
     return content
