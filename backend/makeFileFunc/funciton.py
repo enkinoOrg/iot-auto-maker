@@ -19,3 +19,10 @@ def replace_word_in_file(file_path: str, word: str, replace_word: str):
         content = content.replace(word, replace_word)
     with open(file_path, 'w') as f:
         f.write(content)
+
+def add_text_to_file(content_file: str, source_file: str):
+    with open(content_file, 'r') as f1:
+        content = f1.read()
+
+    with open(source_file, 'a') as f2:
+        f2.write(content)

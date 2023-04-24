@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from makeFileFunc.funciton import copy_file_content
 from makeFileFunc.funciton import append_text_to_file
 from makeFileFunc.funciton import replace_word_in_file
+from makeFileFunc.funciton import add_text_to_file
 from app.models import ProjectModel
 
 app = FastAPI()
@@ -46,7 +47,7 @@ async def root(projectModel: ProjectModel):
     print("=== make crud start ===")
     copy_file_content('modelSample/crud.txt', 'api_result/src/app/api/crud.py')
     content = create_content_make(table_list)
-
+ 
     # create.py 생성
     copy_file_content('modelSample2/create.txt', 'modelSample2/create.py')
 
@@ -61,5 +62,42 @@ def create_content_make(table_list):
     content = ''
     for table in table_list:
         print(f'{table["name"]}: {table["type"]}')
-        content += f'{table["name"]}=schema_name.{table["name"]}\n \t\t'
+        content += f'{table["name"]}=schema_name.{table["name"]},\n \t\t'
     return content
+
+def make_models(table_list):
+    # models.py생성
+    print("=== make model start ===")
+    copy_file_content('modelSample/model.txt', 'api_result/src/app/api/models.py')
+    print("=== copy end ===")
+    for table in table_list:
+        print(f'{table["name"]}: {table["type"]}')
+        append_text_to_file('api_result/src/app/api/models.py', f'\t{table["name"]}: {table["type"]}\n')
+    add_text_to_file('modelSample/model2.txt', 'api_result/src/app/api/models.py')
+    print("=== model make end  ===")
+
+@app.post("/dbmake")
+async def root(projectModel: ProjectModel):
+    project_name = projectModel.projectName
+    project_type = projectModel.dbType
+    project_explain = projectModel.explain
+    table_list = projectModel.tableName
+
+    # models.py 생성
+    make_models(table_list)
+
+    # crud make
+    print("=== make crud start ===")
+    copy_file_content('modelSample/crud.txt', 'api_result/src/app/api/crud.py')
+    
+    # create.py 생성
+    copy_file_content('modelSample2/create.txt', 'modelSample2/create.py')
+    content = create_content_make(table_list)
+    replace_word_in_file('modelSample2/create.py', 'query_content', content)
+    add_text_to_file('modelSample2/create.py', 'api_result/src/app/api/crud.py')
+
+    # update.py 생성
+    copy_file_content('modelSample2/update.txt', 'modelSample2/update.py')
+    content = create_content_make(table_list)
+    replace_word_in_file('modelSample2/update.py', 'query_content', content)
+    add_text_to_file('modelSample2/update.py', 'api_result/src/app/api/crud.py')

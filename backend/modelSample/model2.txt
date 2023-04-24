@@ -1,0 +1,2 @@
+class ProjectModelDB(ProjectModel):
+    id: int

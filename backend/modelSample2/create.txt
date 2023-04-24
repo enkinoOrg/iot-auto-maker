@@ -3,4 +3,4 @@ async def create(payload: schema_name):
         # table 내용
         query_content
     )
-    return await table_name.execute(query=query)
+    return await database.execute(query=query)
