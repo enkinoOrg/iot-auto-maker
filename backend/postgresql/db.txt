@@ -1,0 +1,21 @@
+import os
+
+from sqlalchemy import (Column, Integer, String, Table, create_engine, Metadata)
+from dotenv import load_dotenv
+from databases import Database
+// from datetime import datetime as dt
+// from pytz import timezone as tz
+
+load_dotenv()
+
+// DATABASE_URL = os
+
+#sqlalchemy
+engine = create_engine(DATABASE_URL) 
+metadata = Metadata()
+
+// sqlalchemy table 정의
+
+
+db연결
+database = Database(DATABASE_URL)

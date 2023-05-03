@@ -5,6 +5,7 @@ from makeFileFunc.funciton import copy_file_content
 from makeFileFunc.funciton import append_text_to_file
 from makeFileFunc.funciton import replace_word_in_file
 from makeFileFunc.funciton import add_text_to_file
+from makeDBFunc.function import model_type_postgre
 from app.models import ProjectModel
 
 app = FastAPI()
@@ -65,6 +66,14 @@ def create_content_make(table_list):
         content += f'{table["name"]}=schema_name.{table["name"]},\n \t\t'
     return content
 
+def create_content_db_postgre(table_list):
+    content = ''
+    for table in table_list:
+        print(f'Column({table["name"]}, {table["type"]})')
+        content = model_type_postgre(table)
+        replace_word_in_file()
+    return content
+
 def make_models(table_list):
     # models.py생성
     print("=== make model start ===")
@@ -76,20 +85,10 @@ def make_models(table_list):
     add_text_to_file('modelSample/model2.txt', 'api_result/src/app/api/models.py')
     print("=== model make end  ===")
 
-@app.post("/dbmake")
-async def root(projectModel: ProjectModel):
-    project_name = projectModel.projectName
-    project_type = projectModel.dbType
-    project_explain = projectModel.explain
-    table_list = projectModel.tableName
-
-    # models.py 생성
-    make_models(table_list)
-
-    # crud make
+def crud_make(table_list):
     print("=== make crud start ===")
     copy_file_content('modelSample/crud.txt', 'api_result/src/app/api/crud.py')
-    
+
     # create.py 생성
     copy_file_content('modelSample2/create.txt', 'modelSample2/create.py')
     content = create_content_make(table_list)
@@ -101,3 +100,28 @@ async def root(projectModel: ProjectModel):
     content = create_content_make(table_list)
     replace_word_in_file('modelSample2/update.py', 'query_content', content)
     add_text_to_file('modelSample2/update.py', 'api_result/src/app/api/crud.py')
+
+@app.post("/dbmake")
+# db.py 생성
+async def root(table_list):
+    copy_file_content('modelSample/db.txt', 'api_result/src/app/api/db.py')
+    # db.py content 수정
+    content = create_content_db_postgre(table_list)
+
+
+# postgresql일 경우 main.py 생성
+
+
+# async def root(projectModel: ProjectModel):
+#     project_name = projectModel.projectName
+#     project_type = projectModel.dbType
+#     project_explain = projectModel.explain
+#     table_list = projectModel.tableName
+
+#     # models.py 생성
+#     make_models(table_list)
+
+#     # crud.py 생성
+#     crud_make(table_list)
+
+#     # db.py 생성  
