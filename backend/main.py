@@ -108,6 +108,9 @@ async def root(table_list):
     # db.py content 수정
     content = create_content_db_postgre(table_list)
 
+@app.post("/make_main")
+async def root(table_list):
+    copy_file_content('modelSample/main.txt', 'api_result/src/main.py')
 
 # postgresql일 경우 main.py 생성
 
