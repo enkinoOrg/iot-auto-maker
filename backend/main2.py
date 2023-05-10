@@ -74,5 +74,13 @@ def copy_folder(src_folder, dst_folder):
     shutil.copytree(src_folder, dst_folder)
 
 # 2. main.py를 복사
+def copy_main_file(table_list):
+    copy_file_content('main.py', 'api_result/main.py')
 
 # 3. db.py를 복사
+def copy_db_file(table_list):
+    copy_file_content('db.py', 'api_result/db.py')
+
+# 4. crud.py를 생성
+def make_crud_file(table_list):
+    copy_file_content('crud.txt', 'api_result/crud.py')
