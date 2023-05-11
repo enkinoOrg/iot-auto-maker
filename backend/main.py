@@ -136,6 +136,7 @@ from app.models import ProjectModel
 from makeFileFunc.funciton import replace_word_in_file
 from makeFileFunc.funciton import copy_file_content
 from makeFileFunc.funciton import append_text_to_file
+from makeDBFunc.function import model_type_postgre
 
 ## test용
 import re
@@ -206,6 +207,7 @@ async def copy_postgresql_folder(projectModel: ProjectModel):
     #TODO 기존에 폴더 존재할때 예외처리
     copy_folder('postgresql', 'api_result/postgresql')
     copy_main_file(projectModel.projectName)
+    copy_db_file(table_list)
 
 # 1. 기본 폴더 설정 structure
 # 폴더를 복사하는 함수
@@ -225,7 +227,12 @@ def copy_main_file(router_name):
 
 # 3. db.py를 복사
 def copy_db_file(table_list):
-    copy_file_content('db.py', 'api_result/postgresql/src/db.py')
+    copy_file_content('api_result/postgresql/txt/db.txt', 'api_result/postgresql/src/app/db.py')
+    content = create_content_db_postgre(table_list)
+    print(content)
+    replace_word_in_file('api_result/postgresql/src/app/db.py', 'table_content', content)
+
+# --------------------- db.py까지 완료 ---------------------
 
 # 4. crud.py를 생성
 # 5. crud (create, read, update, delete) 함수를 생성
@@ -234,3 +241,12 @@ def make_crud_file(table_list):
 
 # 6. create 함수를 생성
 # 7. update 함수를 생성
+
+# 함수 추후 파일로 분리 예정
+def create_content_db_postgre(table_list):
+    print("table list :", table_list)
+    content = ''
+    for table in table_list:
+        print(f'Column({table["name"]}, {table["type"]})')
+        content += model_type_postgre(table) + '\n' + '\t'
+    return content
