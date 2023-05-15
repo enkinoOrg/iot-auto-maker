@@ -114,7 +114,7 @@
 # # postgresql일 경우 main.py 생성
 
 
-# # async def root(projectModel: ProjectModel):
+# # async def root(projectModel: ProjectModel):                
 # #     project_name = projectModel.projectName
 # #     project_type = projectModel.dbType
 # #     project_explain = projectModel.explain
@@ -147,6 +147,7 @@ import shutil
 
 app = FastAPI()
 
+
 origins = [
     "http://localhost",
     "http://localhost:3000",
@@ -175,7 +176,7 @@ async def root(projectModel: ProjectModel):
     print(projectModel)
     table_list = projectModel.tableName
     make_model(table_list)
-    # db에 테이블을 만드는 작업
+    # db에 테이블을 만드는 작업  
     # template body
     # 사용자 정보랑, version
     return projectModel
@@ -212,6 +213,8 @@ async def copy_postgresql_folder(projectModel: ProjectModel):
 # 1. 기본 폴더 설정 structure
 # 폴더를 복사하는 함수
 # 기존에 폴더가 존재하면 예외처리
+# 함수들 파일 분리 예정
+
 def copy_folder(src_folder, dst_folder):
     if (os.path.isdir(dst_folder)):
         print("exist")
@@ -222,6 +225,9 @@ def copy_folder(src_folder, dst_folder):
 def copy_main_file(router_name):
     copy_file_content('postgresql/txt/main.txt', 'api_result/postgresql/src/app/main.py')
     replace_word_in_file('api_result/postgresql/src/app/main.py', '{router_name}', router_name)
+    # main.txt.삭제
+    os.remove('api_result/postgresql/src/app/main.txt')
+    os.remove('api_result/postgresql/txt/main.txt')
 
 # --------------------- main.py까지 완료 ---------------------
 
@@ -231,6 +237,9 @@ def copy_db_file(table_list):
     content = create_content_db_postgre(table_list)
     print(content)
     replace_word_in_file('api_result/postgresql/src/app/db.py', 'table_content', content)
+    # db.txt.삭제
+    os.remove('api_result/postgresql/src/app/db.txt')
+    os.remove('api_result/postgresql/txt/db.txt')
 
 # --------------------- db.py까지 완료 ---------------------
 
@@ -240,6 +249,7 @@ def make_crud_file(table_list):
     copy_file_content('crud.txt', 'api_result/postgresql/src/crud.py')
 
 # 6. create 함수를 생성
+
 # 7. update 함수를 생성
 
 # 함수 추후 파일로 분리 예정
