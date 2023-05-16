@@ -209,6 +209,9 @@ async def copy_postgresql_folder(projectModel: ProjectModel):
     copy_folder('postgresql', 'api_result/postgresql')
     copy_main_file(projectModel.projectName)
     copy_db_file(table_list)
+    copy_crud_file(table_list)
+    copy_models_file(table_list)
+    copy_routers_file(table_list)
 
 # 1. 기본 폴더 설정 structure
 # 폴더를 복사하는 함수
@@ -245,9 +248,14 @@ def copy_db_file(table_list):
 
 # 4. crud.py를 생성
 # 5. crud (create, read, update, delete) 함수를 생성
-def make_crud_file(table_list):
-    copy_file_content('crud.txt', 'api_result/postgresql/src/crud.py')
+def copy_crud_file(table_list):
+    copy_file_content('api_result/postgresql/txt/crud.txt', 'api_result/postgresql/src/app/api/crud.py')
 
+def copy_models_file(table_list):
+    copy_file_content('api_result/postgresql/txt/models.txt', 'api_result/postgresql/src/app/api/models.py')
+
+def copy_routers_file(table_list):
+    copy_file_content('api_result/postgresql/txt/routers.txt', 'api_result/postgresql/src/app/api/routers.py')
 # 6. create 함수를 생성
 
 # 7. update 함수를 생성
