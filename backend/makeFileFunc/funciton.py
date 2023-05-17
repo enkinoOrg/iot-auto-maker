@@ -26,3 +26,6 @@ def add_text_to_file(content_file: str, source_file: str):
 
     with open(source_file, 'a') as f2:
         f2.write(content)
+
+def replace_space_to_underbar(text: str):
+    return text.replace(" ", "_")

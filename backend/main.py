@@ -133,10 +133,11 @@
 from fastapi import FastAPI, Body
 from fastapi.middleware.cors import CORSMiddleware
 from app.models import ProjectModel
+from makeDBFunc.function import db_sqlalchemy_postgre, create_content_db_postgre, create_content_model_postgre
 from makeFileFunc.funciton import replace_word_in_file
 from makeFileFunc.funciton import copy_file_content
 from makeFileFunc.funciton import append_text_to_file
-from makeDBFunc.function import model_type_postgre
+from makeFileFunc.funciton import replace_space_to_underbar
 
 ## test용
 import re
@@ -204,14 +205,21 @@ def make_model(table_list):
 async def copy_postgresql_folder(projectModel: ProjectModel):
     print(projectModel)
     table_list = projectModel.tableName
+    table_name = replace_space_to_underbar(projectModel.projectName)
+
+    # schema model
+    schema_model = table_name + "_model"
+    schema_db = table_name + "_db"
+        
     
     #TODO 기존에 폴더 존재할때 예외처리
     copy_folder('postgresql', 'api_result/postgresql')
     copy_main_file(projectModel.projectName)
-    copy_db_file(table_list)
+    copy_db_file(table_list, table_name)
     copy_crud_file(table_list)
-    copy_models_file(table_list)
+    copy_models_file(table_list, schema_model, schema_db)
     copy_routers_file(table_list)
+    print("=== copy end ===")
 
 # 1. 기본 폴더 설정 structure
 # 폴더를 복사하는 함수
@@ -235,11 +243,12 @@ def copy_main_file(router_name):
 # --------------------- main.py까지 완료 ---------------------
 
 # 3. db.py를 복사
-def copy_db_file(table_list):
+def copy_db_file(table_list, table_name):
     copy_file_content('api_result/postgresql/txt/db.txt', 'api_result/postgresql/src/app/db.py')
     content = create_content_db_postgre(table_list)
     print(content)
     replace_word_in_file('api_result/postgresql/src/app/db.py', 'table_content', content)
+    replace_word_in_file('api_result/postgresql/src/app/db.py', 'schema_name', table_name)
     # db.txt.삭제
     os.remove('api_result/postgresql/src/app/db.txt')
     os.remove('api_result/postgresql/txt/db.txt')
@@ -250,21 +259,22 @@ def copy_db_file(table_list):
 # 5. crud (create, read, update, delete) 함수를 생성
 def copy_crud_file(table_list):
     copy_file_content('api_result/postgresql/txt/crud.txt', 'api_result/postgresql/src/app/api/crud.py')
+    os.remove('api_result/postgresql/src/app/api/crud.txt')
 
-def copy_models_file(table_list):
+# model
+def copy_models_file(table_list, schema_model, schema_db):
     copy_file_content('api_result/postgresql/txt/models.txt', 'api_result/postgresql/src/app/api/models.py')
+    content = create_content_model_postgre(table_list)
+    replace_word_in_file('api_result/postgresql/src/app/api/models.py', 'model_content', content)
+
+    replace_word_in_file('api_result/postgresql/src/app/api/models.py', '${schema_model}', schema_model)
+    replace_word_in_file('api_result/postgresql/src/app/api/models.py', '${schema_name}', schema_db)
+
+    os.remove('api_result/postgresql/src/app/api/models.txt')
 
 def copy_routers_file(table_list):
     copy_file_content('api_result/postgresql/txt/routers.txt', 'api_result/postgresql/src/app/api/routers.py')
+    os.remove('api_result/postgresql/src/app/api/routers.txt')
 # 6. create 함수를 생성
 
 # 7. update 함수를 생성
-
-# 함수 추후 파일로 분리 예정
-def create_content_db_postgre(table_list):
-    print("table list :", table_list)
-    content = ''
-    for table in table_list:
-        print(f'Column({table["name"]}, {table["type"]})')
-        content += model_type_postgre(table) + '\n' + '\t'
-    return content
