@@ -216,7 +216,7 @@ async def copy_postgresql_folder(projectModel: ProjectModel):
     copy_folder('postgresql', 'api_result/postgresql')
     copy_main_file(projectModel.projectName)
     copy_db_file(table_list, table_name)
-    copy_crud_file(table_list)
+    copy_crud_file(table_list, schema_model, schema_db, table_name)
     copy_models_file(table_list, schema_model, schema_db)
     copy_routers_file(table_list)
     print("=== copy end ===")
@@ -257,8 +257,11 @@ def copy_db_file(table_list, table_name):
 
 # 4. crud.py를 생성
 # 5. crud (create, read, update, delete) 함수를 생성
-def copy_crud_file(table_list):
+def copy_crud_file(table_list, schema_model, schema_db, table_name):
     copy_file_content('api_result/postgresql/txt/crud.txt', 'api_result/postgresql/src/app/api/crud.py')
+    replace_word_in_file('api_result/postgresql/src/app/api/crud.py', '${schema_model}', schema_model)
+    replace_word_in_file('api_result/postgresql/src/app/api/crud.py', '${schema_name}', schema_db)
+    replace_word_in_file('api_result/postgresql/src/app/api/crud.py', '${table_name}', table_name)
     os.remove('api_result/postgresql/src/app/api/crud.txt')
 
 # model

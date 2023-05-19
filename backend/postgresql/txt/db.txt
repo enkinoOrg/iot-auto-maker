@@ -19,6 +19,7 @@ metadata = MetaData()
 schema_name = Table(
     "schema_name",
     metadata,
+    Column("id", Integer, primary_key=True),
     # table 내용
     table_content
 )
