@@ -218,7 +218,9 @@ async def copy_postgresql_folder(projectModel: ProjectModel):
     copy_db_file(table_list, table_name)
     copy_crud_file(table_list, schema_model, schema_db, table_name)
     copy_models_file(table_list, schema_model, schema_db)
-    copy_routers_file(table_list)
+    # copy_routers_file(table_list, schema_model, schema_db)
+    copy_routers_file(table_list, schema_model, schema_db)
+    
     print("=== copy end ===")
 
 # 1. 기본 폴더 설정 structure
@@ -275,9 +277,20 @@ def copy_models_file(table_list, schema_model, schema_db):
 
     os.remove('api_result/postgresql/src/app/api/models.txt')
 
-def copy_routers_file(table_list):
+# content 생성
+def copy_routers_file(table_list, schema_model, schema_db):
     copy_file_content('api_result/postgresql/txt/routers.txt', 'api_result/postgresql/src/app/api/routers.py')
     os.remove('api_result/postgresql/src/app/api/routers.txt')
-# 6. create 함수를 생성
+    content = ""
+    # models에 있는 내용을 가져와서 content에 추가
 
-# 7. update 함수를 생성
+    for table in table_list:
+        print(f'{table["name"]}: {table["type"]}')
+        content += f'"{table["name"]}": payload.{table["name"]},\n\t\t'
+
+    replace_word_in_file('api_result/postgresql/src/app/api/routers.py', '${schema_model}', schema_model)
+
+    replace_word_in_file('api_result/postgresql/src/app/api/routers.py', '${schema_name}', schema_db)
+    
+    replace_word_in_file('api_result/postgresql/src/app/api/routers.py', 'object contets', content)
+
