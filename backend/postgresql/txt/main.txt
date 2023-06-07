@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from app.api import notes, ping
+from app.api import routers
 from app.db import engine, metadata, database
 
 metadata.create_all(engine)
@@ -32,5 +32,9 @@ async def startup():
 async def shutdown():
     await database.disconnect()
 
+@app.get("/")
+async def root():
+    return {"message": "make app"}
+
 # router_name
-app.include_router({router_name}.router, prefix="/{router_name}", tags=["{router_name}"])
+app.include_router(routers.router, prefix="/{router_name}", tags=["{router_name}"])

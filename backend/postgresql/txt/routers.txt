@@ -5,13 +5,24 @@ from typing import List
 router = APIRouter()
 
 @router.post("/", response_model=${schema_name}, status_code=201)
-
-async def create_${schema_name}(payload: ${schema_model}):
+async def create_schema(payload: ${schema_model}):
     schema_id = await crud.post(payload)
 
     response_object = {
         # TODO: contents 내용 추가
+        "id": schema_id,
         object contets
+    }
+    return response_object
+
+@router.put("/{id}/", response_model={schema_name})
+async def update_schema(payload: ${schema_model}, id: int = Path(..., gt=0)):
+    schema = await crud.get(id)
+    if not schema:
+        raise HTTPException(status_code=404, detail="not found")
+    schema_id = await crud.put(id, payload)
+    response_object = {
+        update_content
     }
     return response_object
 
@@ -20,7 +31,7 @@ async def read_schema():
     schema = await crud.get(id)
     if not schema:
         raise HTTPException(status_code=404, detail="Not found")
-    return schema
+    return schema   
 
 @router.get("/", response_model=List[${schema_name}])
 async def real_all_schema():

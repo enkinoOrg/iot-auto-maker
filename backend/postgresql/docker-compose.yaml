@@ -17,9 +17,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=hello_fastapi
-      - POSTGRES_PASSWORD=hello_fastapi
-      - POSTGRES_DB=hello_fastapi_dev
+      - POSTGRES_USER=${POSTGRESQL_ROOT_USER}
+      - POSTGRES_PASSWORD=${POSTGRESQL_ROOT_PASSWORD}
+      - POSTGRES_DB=${POSTGRESQL_DATABASE}
+    ports:
+      - ${POSTGRESQL_PORT}:${POSTGRESQL_PORT}
 
 volumes:
   postgres_data:
@@ -27,4 +29,3 @@ volumes:
 networks:
   default:
       name: hello_fastapi
-

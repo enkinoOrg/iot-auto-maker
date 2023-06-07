@@ -167,36 +167,36 @@ async def root():
 
     return {"message": "Hello World"}
 
-@app.post("/template")
-async def root(projectModel: ProjectModel):
-    copy_file_content('modelSample/test2.txt', 'api_result/src/app/api/test2.py')
-    return projectModel
+# @app.post("/template")
+# async def root(projectModel: ProjectModel):
+#     copy_file_content('modelSample/test2.txt', 'api_result/src/app/api/test2.py')
+#     return projectModel
 
-@app.post("/template2")
-async def root(projectModel: ProjectModel):
-    print(projectModel)
-    table_list = projectModel.tableName
-    make_model(table_list)
-    # db에 테이블을 만드는 작업  
-    # template body
-    # 사용자 정보랑, version
-    return projectModel
+# @app.post("/template2")
+# async def root(projectModel: ProjectModel):
+#     print(projectModel)
+#     table_list = projectModel.tableName
+#     make_model(table_list)
+#     # db에 테이블을 만드는 작업  
+#     # template body
+#     # 사용자 정보랑, version
+#     return projectModel
 
-# python 파일 작성 함수
-def make_model(table_list):
+# # python 파일 작성 함수
+# def make_model(table_list):
 
-    # models.py생성
-    print("=== make model start ===")
-    copy_file_content('modelSample/model.txt', 'api_result/src/app/api/models.py')
-    print("=== copy end ===")
+#     # models.py생성
+#     print("=== make model start ===")
+#     copy_file_content('modelSample/model.txt', 'api_result/src/app/api/models.py')
+#     print("=== copy end ===")
 
-    for table in table_list:
-        print(f'{table["name"]}: {table["type"]}')
-        append_text_to_file('api_result/src/app/api/models.py', f'\t{table["name"]}: {table["type"]}\n')
+#     for table in table_list:
+#         print(f'{table["name"]}: {table["type"]}')
+#         append_text_to_file('api_result/src/app/api/models.py', f'\t{table["name"]}: {table["type"]}\n')
 
-    # crud.py 
-    print("=== make crud start ===")
-    copy_file_content('modelSample/crud.txt', 'api_result/src/app/api/crud.py')
+#     # crud.py 
+#     print("=== make crud start ===")
+#     copy_file_content('modelSample/crud.txt', 'api_result/src/app/api/crud.py')
 
 # postgresql 폴더로 묶어서 복사
 
@@ -251,7 +251,7 @@ def copy_db_file(table_list, table_name):
     print(content)
     replace_word_in_file('api_result/postgresql/src/app/db.py', 'table_content', content)
     replace_word_in_file('api_result/postgresql/src/app/db.py', 'schema_name', table_name)
-    # db.txt.삭제
+    # db.txt 삭제
     os.remove('api_result/postgresql/src/app/db.txt')
     os.remove('api_result/postgresql/txt/db.txt')
 
@@ -264,7 +264,25 @@ def copy_crud_file(table_list, schema_model, schema_db, table_name):
     replace_word_in_file('api_result/postgresql/src/app/api/crud.py', '${schema_model}', schema_model)
     replace_word_in_file('api_result/postgresql/src/app/api/crud.py', '${schema_name}', schema_db)
     replace_word_in_file('api_result/postgresql/src/app/api/crud.py', '${table_name}', table_name)
+
+    # create 함수 생성
+    replace_word_in_file('api_result/postgresql/src/app/api/crud.py', 'create_content', create_crud_content(table_list))
+
+    # update 함수 생성
+    replace_word_in_file('api_result/postgresql/src/app/api/crud.py', 'update_content', update_crud_content(table_list))
     os.remove('api_result/postgresql/src/app/api/crud.txt')
+
+def create_crud_content(table_list):
+    content = ""
+    for table in table_list:
+        content += f'{table["name"]}=payload.{table["name"]},\n\t\t'
+    return content
+
+def update_crud_content(table_list):
+    content = ""
+    for table in table_list:
+        content += f'{table["name"]}=payload.{table["name"]},\n\t\t\t'
+    return content
 
 # model
 def copy_models_file(table_list, schema_model, schema_db):
@@ -293,4 +311,6 @@ def copy_routers_file(table_list, schema_model, schema_db):
     replace_word_in_file('api_result/postgresql/src/app/api/routers.py', '${schema_name}', schema_db)
     
     replace_word_in_file('api_result/postgresql/src/app/api/routers.py', 'object contets', content)
+
+    replace_word_in_file('api_result/postgresql/src/app/api/routers.py', 'update_content', content)
 
