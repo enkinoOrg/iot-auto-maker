@@ -8,3 +8,10 @@ class ProjectModel(BaseModel):
     version: float
     explain: str
     tableName: list
+
+class ProjectModel2(BaseModel):
+    project_name: str
+    category: str
+    description: str
+    project_field: list
+    # dbType: str
