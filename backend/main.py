@@ -176,6 +176,8 @@ def copy_routers_file(table_list, schema_model, schema_db):
 #     print (projectModel2)
 
 # 1. project id를 받아서 feild목록을 가져오기.
+
+# TODO: 파일 내용 수정, 및 mqtt도 추가 예정
 @app.post("/template")
 async def make_project_file(project_id: int):
     print(project_id)
