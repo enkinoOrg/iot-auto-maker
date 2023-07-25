@@ -66,6 +66,15 @@ async def copy_postgresql_folder(projectModel: ProjectModel):
     copy_models_file(table_list, schema_model, schema_db)
     # copy_routers_file(table_list, schema_model, schema_db)
     copy_routers_file(table_list, schema_model, schema_db)
+
+    # table_list = [
+    #   {
+    #       "no": "1",
+    #       "name": "RTU_ID",
+    #       "explain": "RTU 고유의 ID",
+    #       "type": "int"
+    #   }
+    # ]
     
     print("=== copy end ===")
 
@@ -121,13 +130,13 @@ def copy_crud_file(table_list, schema_model, schema_db, table_name):
 def create_crud_content(table_list):
     content = ""
     for table in table_list:
-        content += f'{table["name"]}=payload.{table["name"]},\n\t\t'
+        content += f'{table["data_name"]}=payload.{table["data_name"]},\n\t\t'
     return content
 
 def update_crud_content(table_list):
     content = ""
     for table in table_list:
-        content += f'{table["name"]}=payload.{table["name"]},\n\t\t\t'
+        content += f'{table["data_name"]}=payload.{table["data_name"]},\n\t\t\t'
     return content
 
 # model
@@ -149,8 +158,8 @@ def copy_routers_file(table_list, schema_model, schema_db):
     # models에 있는 내용을 가져와서 content에 추가
 
     for table in table_list:
-        print(f'{table["name"]}: {table["type"]}')
-        content += f'"{table["name"]}": payload.{table["name"]},\n\t\t'
+        print(f'{table["data_name"]}: {table["data_type"]}')
+        content += f'"{table["data_name"]}": payload.{table["data_name"]},\n\t\t'
 
     replace_word_in_file('api_result/postgresql/src/app/api/routers.py', '${schema_model}', schema_model)
 
@@ -172,6 +181,36 @@ async def make_project_file(project_id: int):
     print(project_id)
     # project_id를 받아서 supabase에서 project_id에 해당하는 field를 가져온다.
     response = supabase.table('project_field').select('*').eq('project_id', project_id).execute()
-    print("response : ", response.data)
+    response2 = supabase.table('projects').select('*').eq('project_id', project_id).execute()
 
-    # response.data => array
+    # --------------------------------------------------------------------------------------------------
+
+    table_name = response2.data[0]['table_name']
+
+    schema_model = table_name + "_model"
+    schema_db = table_name + "_db"
+
+    table_list = response.data
+
+    print("schema_model : ", schema_model)
+    print("schema_db : ", schema_db)
+
+    copy_folder('postgresql', 'api_result/postgresql')
+    print("=== copy folder end ===")
+    copy_main_file(table_name)
+    print("=== copy main end ===")
+    copy_db_file(table_list, table_name)
+    print("=== copy db end ===")
+    copy_crud_file(table_list, schema_model, schema_db, table_name)
+    print("=== copy crud end ===")
+    copy_models_file(table_list, schema_model, schema_db)
+    print("=== copy models end ===")
+    copy_routers_file(table_list, schema_model, schema_db)
+    print("=== copy routers end ===")
+
+    print("=== copy end ===")
+
+    # data 구조 수정
+    # 파일 복사
+
+    # response.data => array1
