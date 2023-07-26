@@ -4,10 +4,10 @@ from fastapi import FastAPI, Body
 from fastapi.middleware.cors import CORSMiddleware
 from app.models import ProjectModel, ProjectModel2, GetProjectIdModel
 from makeDBFunc.function import db_sqlalchemy_postgre, create_content_db_postgre, create_content_model_postgre
-from makeFileFunc.funciton import replace_word_in_file
-from makeFileFunc.funciton import copy_file_content
-from makeFileFunc.funciton import append_text_to_file
-from makeFileFunc.funciton import replace_space_to_underbar
+from makeFileFunc.function import replace_word_in_file
+from makeFileFunc.function import copy_file_content
+from makeFileFunc.function import append_text_to_file
+from makeFileFunc.function import replace_space_to_underbar
 
 from dotenv import load_dotenv
 from supabase import create_client, Client
