@@ -1,4 +1,4 @@
-version: "3.3"
+version: '3.3'
 
 services:
   db:
@@ -11,20 +11,33 @@ services:
       - POSTGRES_DB=${POSTGRESQL_DATABASE}
     ports:
       - ${POSTGRESQL_PORT}:${POSTGRESQL_PORT}
-  web:
+  backend:
     build: ./src
     command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
-    # install requirements.txt
-    
     volumes:
       - ./src/:/usr/src/app/
     ports:
-      - 8002:8000                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+      - 8000:8000
     environment:
       - DATABASE_URL=postgresql://hello_fastapi:hello_fastapi@db/hello_fastapi_dev
-
     depends_on:
       - db
+  mosquitto:
+    restart: always
+    image: "eclipse-mosquitto"
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mqtt/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mqtt/data:/mosquitto/data
+      - ./mqtt/log:/mosquitto/log
+  subscribe:
+    restart: always
+    build: ./mqtt/src
+    command: python3 subscribe.py
+    environment:
+      - mqtturl=mosquitto
 volumes:
   postgres_data:
 

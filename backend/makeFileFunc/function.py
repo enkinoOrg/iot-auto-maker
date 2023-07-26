@@ -30,3 +30,9 @@ def add_text_to_file(content_file: str, source_file: str):
 def replace_space_to_underbar(text: str):
     return text.replace(" ", "_")
 
+def replace_word_to_array(file_path: str, word: str, replace_word: list):
+    with open(file_path, 'r', encoding='UTF8') as f:
+        content = f.read()
+        content = content.replace(word, str(replace_word))
+    with open(file_path, 'w', encoding='UTF8') as f:
+        f.write(content)

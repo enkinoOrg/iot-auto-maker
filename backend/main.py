@@ -8,6 +8,7 @@ from makeFileFunc.function import replace_word_in_file
 from makeFileFunc.function import copy_file_content
 from makeFileFunc.function import append_text_to_file
 from makeFileFunc.function import replace_space_to_underbar
+from makeFileFunc.function import replace_word_to_array
 
 from dotenv import load_dotenv
 from supabase import create_client, Client
@@ -170,6 +171,11 @@ def copy_routers_file(table_list, schema_model, schema_db):
     replace_word_in_file('api_result/postgresql/src/app/api/routers.py', 'update_content', content)
 
 
+def make_mqtt_subscribe_file(sec_key, table_id, table_name):
+    replace_word_to_array('api_result/postgresql/mqtt/src/subscribe.py', '${sec_key}', sec_key)
+    replace_word_in_file('api_result/postgresql/mqtt/src/subscribe.py', '${table_id}', table_id)
+    replace_word_in_file('api_result/postgresql/mqtt/src/subscribe.py', '${tablt_name}', table_name)
+
 # mqtt 서버 생성
 # @app.post("/template") 
 # async def get_mqtt_server(projectModel2: ProjectModel2):
@@ -187,6 +193,17 @@ async def make_project_file(getProjectIdModel: GetProjectIdModel):
     response2 = supabase.table('projects').select('*').eq('project_id', project_id).execute()
 
     # --------------------------------------------------------------------------------------------------
+
+    print(response.data)
+
+    sec_key = []
+    for i in range(len(response.data)):
+        sec_key.append(response.data[i]['data_name'])
+
+    table_id = sec_key.pop(0)
+
+
+
 
     table_name = response2.data[0]['table_name']
 
@@ -213,7 +230,5 @@ async def make_project_file(getProjectIdModel: GetProjectIdModel):
 
     print("=== copy end ===")
 
-    # data 구조 수정
-    # 파일 복사
-
-    # response.data => array1
+    # mqtt 복사
+    make_mqtt_subscribe_file(sec_key, table_id, table_name)

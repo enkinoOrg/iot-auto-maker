@@ -1,0 +1,8 @@
+certifi==2023.5.7
+charset-normalizer==3.1.0
+idna==3.4
+mosquito==0.3.2
+paho-mqtt==1.6.1
+requests==2.31.0
+tqdm==4.65.0
+urllib3==2.0.3
