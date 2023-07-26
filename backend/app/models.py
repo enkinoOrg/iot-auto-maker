@@ -15,3 +15,6 @@ class ProjectModel2(BaseModel):
     description: str
     project_field: list
     # dbType: str
+
+class GetProjectIdModel(BaseModel):
+    project_id: int

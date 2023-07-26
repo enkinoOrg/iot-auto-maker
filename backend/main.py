@@ -2,7 +2,7 @@
 import os
 from fastapi import FastAPI, Body
 from fastapi.middleware.cors import CORSMiddleware
-from app.models import ProjectModel, ProjectModel2
+from app.models import ProjectModel, ProjectModel2, GetProjectIdModel
 from makeDBFunc.function import db_sqlalchemy_postgre, create_content_db_postgre, create_content_model_postgre
 from makeFileFunc.funciton import replace_word_in_file
 from makeFileFunc.funciton import copy_file_content
@@ -179,8 +179,9 @@ def copy_routers_file(table_list, schema_model, schema_db):
 
 # TODO: 파일 내용 수정, 및 mqtt도 추가 예정
 @app.post("/template")
-async def make_project_file(project_id: int):
-    print(project_id)
+async def make_project_file(getProjectIdModel: GetProjectIdModel):
+    print(getProjectIdModel)
+    project_id = getProjectIdModel.project_id
     # project_id를 받아서 supabase에서 project_id에 해당하는 field를 가져온다.
     response = supabase.table('project_field').select('*').eq('project_id', project_id).execute()
     response2 = supabase.table('projects').select('*').eq('project_id', project_id).execute()
