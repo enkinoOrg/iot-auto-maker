@@ -23,6 +23,7 @@ jaraco.classes==3.3.0
 keyring==24.2.0
 more-itertools==9.1.0
 packaging==23.1
+paho-mqtt==1.6.1
 pkginfo==1.9.6
 postgrest==0.10.6
 pydantic==1.10.7
