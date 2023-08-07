@@ -3,8 +3,8 @@ import json
 
 json_data = {
     "RTU_ID": "AF_0001",
-    0: 200,
-    1: 300,
+    0: 10,
+    1: 20,
 }
 
 

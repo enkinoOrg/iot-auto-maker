@@ -47,38 +47,6 @@ async def root():
 
     return {"message": "Hello World"}
 
-# template3에서 폴서 생성 및 복사 테스트
-@app.post("/template3")
-async def copy_postgresql_folder(projectModel: ProjectModel):
-    print(projectModel)
-    table_list = projectModel.tableName
-    table_name = replace_space_to_underbar(projectModel.projectName)
-
-    # schema model
-    schema_model = table_name + "_model"
-    schema_db = table_name + "_db"
-        
-    
-    #TODO 기존에 폴더 존재할때 예외처리
-    copy_folder('postgresql', 'api_result/postgresql')
-    copy_main_file(projectModel.projectName)
-    copy_db_file(table_list, table_name)
-    copy_crud_file(table_list, schema_model, schema_db, table_name)
-    copy_models_file(table_list, schema_model, schema_db)
-    # copy_routers_file(table_list, schema_model, schema_db)
-    copy_routers_file(table_list, schema_model, schema_db)
-
-    # table_list = [
-    #   {
-    #       "no": "1",
-    #       "name": "RTU_ID",
-    #       "explain": "RTU 고유의 ID",
-    #       "type": "int"
-    #   }
-    # ]
-    
-    print("=== copy end ===")
-
 # 1. 기본 폴더 설정 structure
 # 폴더를 복사하는 함수
 # 기존에 폴더가 존재하면 예외처리
@@ -201,10 +169,6 @@ async def make_project_file(getProjectIdModel: GetProjectIdModel):
         sec_key.append(response.data[i]['data_name'])
 
     table_id = sec_key.pop(0)
-
-
-
-
     table_name = response2.data[0]['table_name']
 
     schema_model = table_name + "_model"
