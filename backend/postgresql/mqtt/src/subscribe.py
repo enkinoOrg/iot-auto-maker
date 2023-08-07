@@ -81,7 +81,7 @@ client.on_subscribe = on_subscribe
 client.on_message = on_message
 
 client.connect("mosquitto", 1883)
-client.subscribe("device_id/telementry", 1)
+client.subscribe("device_id/telemetry", 1)
 client.loop_forever()
 
 # function

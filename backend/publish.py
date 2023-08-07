@@ -31,7 +31,7 @@ client.on_publish = on_publish
 client.connect("localhost", 1883)
 client.loop_start()
 
-client.publish("device_id/telementry",
+client.publish("device_id/telemetry",
                json.dumps(json_data), 1)
 client.loop_stop()
 client.disconnect()
