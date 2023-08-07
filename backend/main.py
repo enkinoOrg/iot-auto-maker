@@ -134,6 +134,7 @@ def copy_routers_file(table_list, schema_model, schema_db):
 
     replace_word_in_file('api_result/postgresql/src/app/api/routers.py', '${schema_name}', schema_db)
     
+    # TODO : 'object contets 가 맞는지 여부 확인 필요
     replace_word_in_file('api_result/postgresql/src/app/api/routers.py', 'object contets', content)
 
     replace_word_in_file('api_result/postgresql/src/app/api/routers.py', 'update_content', content)
@@ -142,14 +143,14 @@ def copy_routers_file(table_list, schema_model, schema_db):
 def make_mqtt_subscribe_file(sec_key, table_id, table_name):
     replace_word_to_array('api_result/postgresql/mqtt/src/subscribe.py', '${sec_key}', sec_key)
     replace_word_in_file('api_result/postgresql/mqtt/src/subscribe.py', '${table_id}', table_id)
-    replace_word_in_file('api_result/postgresql/mqtt/src/subscribe.py', '${tablt_name}', table_name)
+    replace_word_in_file('api_result/postgresql/mqtt/src/subscribe.py', '${table_name}', table_name)
 
 # mqtt 서버 생성
 # @app.post("/template") 
 # async def get_mqtt_server(projectModel2: ProjectModel2):
 #     print (projectModel2)
 
-# 1. project id를 받아서 feild목록을 가져오기.
+# 1. project id를 받아서 field 목록을 가져오기.
 
 # TODO: 파일 내용 수정, 및 mqtt도 추가 예정
 @app.post("/template")
