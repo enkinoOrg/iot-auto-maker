@@ -1,6 +1,0 @@
-async def create(payload: schema_name):
-    query = table_name.insert().values(
-        # table 내용
-        query_content
-    )
-    return await database.execute(query=query)
