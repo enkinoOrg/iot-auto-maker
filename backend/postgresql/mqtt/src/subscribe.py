@@ -24,7 +24,7 @@ def on_subscribe(client, userdata, mid, granted_qos):
 #     "RPM",
 # ]
 
-# 수정해야할 부분
+# TODO : 수정해야할 부분
 sec_key = ${sec_key}
 
 
