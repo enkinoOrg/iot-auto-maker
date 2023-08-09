@@ -9,6 +9,7 @@ __pycache__/
 
 # api result
 api_result/
+build/
 
 # C extensions
 *.so
