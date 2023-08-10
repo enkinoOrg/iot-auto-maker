@@ -1,0 +1,26 @@
+##TODO: type을 정하는 방법
+import os
+from sqlalchemy import (
+    Column, Float, Integer, String, Table, create_engine, MetaData
+)
+
+from dotenv import load_dotenv
+from databases import Database
+from datetime import datetime as dt
+from pytz import timezone as tz
+
+load_dotenv()
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+#sqlalchemy
+engine = create_engine(DATABASE_URL)
+metadata = MetaData()
+schema_name = Table(
+    "schema_name",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    # table 내용
+    table_content
+)
+
+database = Database(DATABASE_URL)

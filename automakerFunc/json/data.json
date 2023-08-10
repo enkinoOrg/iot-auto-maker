@@ -1,0 +1,31 @@
+{
+  "project_id": 1,
+  "project_name": "프로젝트 v1",
+  "created_at": "2023-08-10",
+  "category": "energy",
+  "description": "프로젝트 json 테스트",
+  "table_name": "project_v1",
+  "project_field": [
+    {
+      "project_id": 1,
+      "data_name": "RTU_ID",
+      "data_type": "int",
+      "data_description": "RTU ID",
+      "created_at": "2023-08-10"
+    },
+    {
+      "project_id": 1,
+      "data_name": "RPM",
+      "data_type": "float",
+      "data_description": "RPM",
+      "created_at": "2023-08-10"
+    },
+    {
+      "project_id": 1,
+      "data_name": "TEMP",
+      "data_type": "float",
+      "data_description": "기기온도",
+      "created_at": "2023-08-10"
+    }
+  ]
+}
