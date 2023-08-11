@@ -1,6 +1,8 @@
 import json
+import requests
 import os
 import shutil
+import sys
 from makeFileFunc.function import copy_file_content, replace_word_in_file, replace_word_to_array
 from makeDBFunc.function import create_content_db_postgre, create_content_model_postgre
 
@@ -90,51 +92,54 @@ def update_crud_content(table_list):
         content += f'{table["data_name"]}=payload.{table["data_name"]},\n\t\t\t'
     return content
 
-
-if __name__ == '__main__':
-    
+def main(url):
     # read json file in json directory
-    with open('json/data.json') as f:
-        data = json.load(f)
 
-        project_id = data['project_id']
-        project_name = data['project_name']
+    if url.startswith('http'):
+        data = requests.get(url).json()
+    else:
+        with open(url) as f:
+            data = json.load(f)
+
+    project_id = data['project_id']
+    project_name = data['project_name']
 
         # fields
-        project_field = data['project_field']
+    project_field = data['project_field']
 
-        print("project_field: ", project_field)
+    print("project_field: ", project_field)
 
-        sec_key = []
-        for i in range(len(project_field)):
-            sec_key.append(project_field[i]['data_name'])
+    sec_key = []
+    for i in range(len(project_field)):
+        sec_key.append(project_field[i]['data_name'])
 
-        table_id = sec_key.pop(0)
+    table_id = sec_key.pop(0)
+    table_name = data['table_name']
 
-        table_name = data['table_name']
+    schema_model = table_name + "_model"
+    schema_db = table_name + "_db"
 
-        schema_model = table_name + "_model"
-        schema_db = table_name + "_db"
+    table_list = project_field
+    print("schema_model : ", schema_model)
+    print("schema_db : ", schema_db)
 
-        table_list = project_field
+    copy_folder('postgresql', 'build/postgresql')
+    print("=== copy folder end ===")
+    copy_main_file(table_name)
+    print("=== copy main end ===")
+    copy_db_file(table_list, table_name)
+    print("=== copy db end ===")
+    copy_crud_file(table_list, schema_model, schema_db, table_name)
+    print("=== copy crud end ===")
+    copy_models_file(table_list, schema_model, schema_db)
+    print("=== copy models end ===")
+    copy_routers_file(table_list, schema_model, schema_db)
+    print("=== copy routers end ===")
 
-        print("schema_model : ", schema_model)
-        print("schema_db : ", schema_db)
+    print("=== copy end ===")
 
-        copy_folder('postgresql', 'build/postgresql')
-        print("=== copy folder end ===")
-        copy_main_file(table_name)
-        print("=== copy main end ===")
-        copy_db_file(table_list, table_name)
-        print("=== copy db end ===")
-        copy_crud_file(table_list, schema_model, schema_db, table_name)
-        print("=== copy crud end ===")
-        copy_models_file(table_list, schema_model, schema_db)
-        print("=== copy models end ===")
-        copy_routers_file(table_list, schema_model, schema_db)
-        print("=== copy routers end ===")
+    # mqtt 복사
+    make_mqtt_subscribe_file(sec_key, table_id, table_name)
 
-        print("=== copy end ===")
-
-        # mqtt 복사
-        make_mqtt_subscribe_file(sec_key, table_id, table_name)
+if __name__ == '__main__':
+    main(sys.argv[1])
