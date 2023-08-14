@@ -1,72 +1,24 @@
-# fastapi
+import json
+import requests
 import os
-from fastapi import FastAPI, Body
-from fastapi.middleware.cors import CORSMiddleware
-from app.models import ProjectModel, ProjectModel2, GetProjectIdModel
-from makeDBFunc.function import db_sqlalchemy_postgre, create_content_db_postgre, create_content_model_postgre
-from makeFileFunc.function import replace_word_in_file
-from makeFileFunc.function import copy_file_content
-from makeFileFunc.function import append_text_to_file
-from makeFileFunc.function import replace_space_to_underbar
-from makeFileFunc.function import replace_word_to_array
-
-from dotenv import load_dotenv
-from supabase import create_client, Client
-
-## test용
-import re
-import os
-from pydantic import BaseModel
-
 import shutil
+import sys
+from makeFileFunc.function import copy_file_content, replace_word_in_file, replace_word_to_array
+from makeDBFunc.function import create_content_db_postgre, create_content_model_postgre
 
-app = FastAPI()
-
-load_dotenv()
-
-origins = [
-    "http://localhost",
-    "http://localhost:3000",
-]
-2
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-url: str = os.environ.get("SUPABASE_URL")
-key: str = os.environ.get("SUPABASE_KEY")
-
-supabase: Client = create_client(url, key)
-
-@app.get("/")
-async def root():
-
-    return {"message": "Hello World"}
-
-# 1. 기본 폴더 설정 structure
-# 폴더를 복사하는 함수
-# 기존에 폴더가 존재하면 예외처리
-# 함수들 파일 분리 예정
-
+# copy file 함수
 def copy_folder(src_folder, dst_folder):
     if (os.path.isdir(dst_folder)):
         print("exist")
         shutil.rmtree(dst_folder)
     shutil.copytree(src_folder, dst_folder)
 
-# 2. main.py를 복사
 def copy_main_file(router_name):
     copy_file_content('postgresql/txt/main.txt', 'build/postgresql/src/app/main.py')
     replace_word_in_file('build/postgresql/src/app/main.py', '{router_name}', router_name)
     # main.txt.삭제
     os.remove('build/postgresql/src/app/main.txt')
     os.remove('build/postgresql/txt/main.txt')
-
-# --------------------- main.py까지 완료 ---------------------
 
 # 3. db.py를 복사
 def copy_db_file(table_list, table_name):
@@ -79,10 +31,6 @@ def copy_db_file(table_list, table_name):
     os.remove('build/postgresql/src/app/db.txt')
     os.remove('build/postgresql/txt/db.txt')
 
-# --------------------- db.py까지 완료 ---------------------
-
-# 4. crud.py를 생성
-# 5. crud (create, read, update, delete) 함수를 생성
 def copy_crud_file(table_list, schema_model, schema_db, table_name):
     copy_file_content('build/postgresql/txt/crud.txt', 'build/postgresql/src/app/api/crud.py')
     replace_word_in_file('build/postgresql/src/app/api/crud.py', '${schema_model}', schema_model)
@@ -96,19 +44,6 @@ def copy_crud_file(table_list, schema_model, schema_db, table_name):
     replace_word_in_file('build/postgresql/src/app/api/crud.py', 'update_content', update_crud_content(table_list))
     os.remove('build/postgresql/src/app/api/crud.txt')
 
-def create_crud_content(table_list):
-    content = ""
-    for table in table_list:
-        content += f'{table["data_name"]}=payload.{table["data_name"]},\n\t\t'
-    return content
-
-def update_crud_content(table_list):
-    content = ""
-    for table in table_list:
-        content += f'{table["data_name"]}=payload.{table["data_name"]},\n\t\t\t'
-    return content
-
-# model
 def copy_models_file(table_list, schema_model, schema_db):
     copy_file_content('build/postgresql/txt/models.txt', 'build/postgresql/src/app/api/models.py')
     content = create_content_model_postgre(table_list)
@@ -145,38 +80,46 @@ def make_mqtt_subscribe_file(sec_key, table_id, table_name):
     replace_word_in_file('build/postgresql/mqtt/src/subscribe.py', '${table_id}', table_id)
     replace_word_in_file('build/postgresql/mqtt/src/subscribe.py', '${table_name}', table_name)
 
-# mqtt 서버 생성
-# @app.post("/template") 
-# async def get_mqtt_server(projectModel2: ProjectModel2):
-#     print (projectModel2)
+def create_crud_content(table_list):
+    content = ""
+    for table in table_list:
+        content += f'{table["data_name"]}=payload.{table["data_name"]},\n\t\t'
+    return content
 
-# 1. project id를 받아서 field 목록을 가져오기.
+def update_crud_content(table_list):
+    content = ""
+    for table in table_list:
+        content += f'{table["data_name"]}=payload.{table["data_name"]},\n\t\t\t'
+    return content
 
-# TODO: 파일 내용 수정, 및 mqtt도 추가 예정
-@app.post("/template")
-async def make_project_file(getProjectIdModel: GetProjectIdModel):
-    print(getProjectIdModel)
-    project_id = getProjectIdModel.project_id
-    # project_id를 받아서 supabase에서 project_id에 해당하는 field를 가져온다.
-    response = supabase.table('project_field').select('*').eq('project_id', project_id).execute()
-    response2 = supabase.table('projects').select('*').eq('project_id', project_id).execute()
+def main(url):
+    # read json file in json directory
 
-    # --------------------------------------------------------------------------------------------------
+    if url.startswith('http'):
+        data = requests.get(url).json()
+    else:
+        with open(url) as f:
+            data = json.load(f)
 
-    print(response.data)
+    project_id = data['project_id']
+    project_name = data['project_name']
+
+        # fields
+    project_field = data['project_field']
+
+    print("project_field: ", project_field)
 
     sec_key = []
-    for i in range(len(response.data)):
-        sec_key.append(response.data[i]['data_name'])
+    for i in range(len(project_field)):
+        sec_key.append(project_field[i]['data_name'])
 
     table_id = sec_key.pop(0)
-    table_name = response2.data[0]['table_name']
+    table_name = data['table_name']
 
     schema_model = table_name + "_model"
     schema_db = table_name + "_db"
 
-    table_list = response.data
-
+    table_list = project_field
     print("schema_model : ", schema_model)
     print("schema_db : ", schema_db)
 
@@ -197,3 +140,6 @@ async def make_project_file(getProjectIdModel: GetProjectIdModel):
 
     # mqtt 복사
     make_mqtt_subscribe_file(sec_key, table_id, table_name)
+
+if __name__ == '__main__':
+    main(sys.argv[1])

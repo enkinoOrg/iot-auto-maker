@@ -1,8 +1,0 @@
-from pydantic import BaseModel
-
-class ${schema_model}(BaseModel):
-model_content
-
-class ${schema_name}(${schema_model}):
-    id: int
-

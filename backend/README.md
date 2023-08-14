@@ -1,49 +1,36 @@
-# IOT-Auto-Maker
----
+# IOT AUTO MAKER
 
-### 가상환경 설정
+### 폴더 구조
+├── README.md
+├── build : 생성된 코드
+│   └── postgresql
+│       
+├── json : 
+│   └── data.json
+├── main.py : main 함수
+├── makeDBFunc
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-38.pyc
+│   │   └── function.cpython-38.pyc
+│   └── function.py
+├── makeFileFunc
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-38.pyc
+│   │   └── function.cpython-38.pyc
+│   └── function.py
+├── mqtt
+│   └── src
+│       ├── Dockerfile
+│       ├── requirements.txt
+│       └── subscribe.py
+└── requirements.txt
 
-1. 가상환경 생성
-
-```sh
-$ python -m venv .venv
+### 실행
 ```
-
-2. 가상환경 활성화
-
-```sh
-# MAC , linux
-$ .venv/bin/activate
-
-# Windows
-# 보안 오류 PSSecurityException 를 해제하기 위해서는 아래 명령 실행 (참고: https://hbesthee.tistory.com/1942)
-$ Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope LocalMachine
-$ .venv\Scripts\activate
+python -m venv .venv // 가상환경 생성
+source .venv/bin/activate // 가상환경 적용
+pip install -r requirements.txt
+python main.py "json파일 위치, json파일의 url"
 ```
-
-3. requirements 설치
-
-```
-$ pip3 install -r requirements.txt
-```
-
-### fast api 실행
-
-```
-$ uvicorn main:app --reload 
-```
-
-- 작업 테이블 생성
-    ```
-    ### Request Body
-    {   
-        "tableName": "string",
-        "version":""
-        "data": [
-            {
-                id: 0,
-                fieldName: "",
-            }
-        ]
-    }
-    ```
