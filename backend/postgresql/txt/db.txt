@@ -21,7 +21,7 @@ schema_name = Table(
     Column("id", Integer, primary_key=True),
     # table 내용
     table_content
-    Column("CREATED_AT", DateTime(timezone=True),
+    Column("created_at", DateTime(timezone=True),
            default=dt.now(tz("Asia/Seoul")))
 )
 

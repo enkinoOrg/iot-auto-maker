@@ -8,7 +8,7 @@ from app.db import ${table_name}, database
 async def post(payload: ${schema_model}):
     query = ${table_name}.insert().values(
         create_content
-        CREATED_AT=datetime.now(tz.timezone("Asia/Seoul"))
+        created_at=datetime.now(tz.timezone("Asia/Seoul"))
     )
     return await database.execute(query=query)
 
