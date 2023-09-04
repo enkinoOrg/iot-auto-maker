@@ -1,7 +1,7 @@
 ##TODO: type을 정하는 방법
 import os
 from sqlalchemy import (
-    Column, Float, Integer, String, Table, create_engine, MetaData
+    Column, Float, Integer, String, Table, create_engine, MetaData, DateTime
 )
 
 from dotenv import load_dotenv
@@ -21,6 +21,8 @@ schema_name = Table(
     Column("id", Integer, primary_key=True),
     # table 내용
     table_content
+    Column("CREATED_AT", DateTime(timezone=True),
+           default=dt.now(tz("Asia/Seoul")))
 )
 
 database = Database(DATABASE_URL)
