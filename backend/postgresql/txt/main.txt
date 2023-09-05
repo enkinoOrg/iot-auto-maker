@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from app.api import routers
+from app.mqtt_api import mqtt_routers
 from app.db import engine, metadata, database
 
 metadata.create_all(engine)
@@ -38,3 +39,4 @@ async def root():
 
 # router_name
 app.include_router(routers.router, prefix="/{router_name}", tags=["{router_name}"])
+app.include_router(mqtt_routers.router, prefix="/mqtt", tags=["mqtt"])
