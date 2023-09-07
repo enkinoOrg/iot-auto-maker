@@ -35,7 +35,7 @@ def makeJsonData(json_data, sec_key):
     value = {}
 
     # 수정해야할 부분
-    value["${table_id}"] = json_data["RTU_ID"]
+    value["${table_id}"] = json_data["id"]
 
     try:
         for idx in range(len(sec_key)):
