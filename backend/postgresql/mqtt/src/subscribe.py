@@ -50,28 +50,22 @@ def makeJsonData(json_data, sec_key):
 
 
 def on_message(client, userdata, msg):
-    json_data = json.loads(msg.payload.decode("utf-8"))
-    json_value = makeJsonData(json_data, sec_key)
 
-    # Post temp data from backend:8000
-    url = "http://backend:8000/${tablt_name}"
+    url = "http://backend:8000"
 
+    if (msg.topic == "device_id/response"):
+        json_data = json.loads(msg.payload.decode("utf-8"))
+        json_value = {}
+        json_value["response"] = json_data["response"]
+        response_url = url + "/mqtt/"+json_data["uuid"]+"/response"
+        response = requests.put(response_url, json=json_value)
 
-    response = requests.post(url, json=json_value)
-    print("response: ", response)
+    elif (msg.topic == "device_id/telemetry"):
+        json_data = json.loads(msg.payload.decode("utf-8"))
+        json_value = makeJsonData(json_data, sec_key)
 
-    # get data to backend:8000
-    # url = "http://backend:8000"
-    # response = requests.get(url)
-    # print("response: ", response)
-
-    # post call to backend:8000
-
-    # api call
-    # fast api
-
-    print(json_value)
-    # print(str(msg.payload.decode("utf-8")))
+        response = requests.post(url + "/${table_name}", json=json_value)
+        print("response : ", response)
 
 
 client = mqtt.Client()
@@ -82,6 +76,7 @@ client.on_message = on_message
 
 client.connect("mosquitto", 1883)
 client.subscribe("device_id/telemetry", 1)
+client.subscribe("device_id/response", 1)
 client.loop_forever()
 
 # function
