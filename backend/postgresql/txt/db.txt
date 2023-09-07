@@ -28,14 +28,14 @@ schema_name = Table(
 mqtt_table = Table(
     "mqtt_table",
     metadata,
+    Column("id", Integer, primary_key=True),
     Column("uuid", String),
-    Column("client_id", String),
-    Column("cmd", String),
-    Column("response", String),
+    Column("client_id", String, nullable=True),
+    Column("cmd", String, nullable=True),
+    Column("response", String, nullable=True, default=None),
     Column("created_at", DateTime(timezone=True),
-           default=dt.now(tz("Asia/Seoul"))),
-    Column("updated_at", DateTime(timezone=True),
-           default=dt.now(tz("Asia/Seoul")))
+           default=dt.now(tz("Asia/Seoul")), nullable=True),
+    Column("updated_at", DateTime(timezone=True), nullable=True, default=None)
 )
 
 database = Database(DATABASE_URL)
