@@ -24,10 +24,11 @@ services:
       - db
   mosquitto:
     restart: always
-    image: "eclipse-mosquitto"
+    image: 'eclipse-mosquitto'
     ports:
-      - "1883:1883"
-      - "9001:9001"
+      - '1883:1883'
+      - '8080:8080'
+      - '9001:9001'
     volumes:
       - ./mqtt/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - ./mqtt/data:/mosquitto/data
@@ -43,4 +44,4 @@ volumes:
 
 networks:
   default:
-      name: hello_fastapi
+    name: hello_fastapi
