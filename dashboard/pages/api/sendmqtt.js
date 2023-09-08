@@ -34,15 +34,16 @@ export const insertMqttCommandData = async mqttData => {
 
 const options = {
   host: '192.168.219.103',
-  port: 1883,
-  protocol: 'mqtt'
+  port: 8080,
+  protocol: 'ws'
   // username:"",
   // password:"",
 }
 
 // mqtt 서버로 보내는 코드
 export const sendMqttMessage = (topic, mqttMessage) => {
-  const client = mqtt.connect(options)
+  const client = mqtt.connect('mqtt://192.168.219.103')
+  console.log(mqttMessage)
 
   client.on('connect', () => {
     console.log('connected' + client.connected)
