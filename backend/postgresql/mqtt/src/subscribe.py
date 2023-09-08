@@ -53,14 +53,14 @@ def on_message(client, userdata, msg):
 
     url = "http://backend:8000"
 
-    if (msg.topic == "device_id/response"):
+    if (msg.topic == "response"):
         json_data = json.loads(msg.payload.decode("utf-8"))
         json_value = {}
         json_value["response"] = json_data["response"]
         response_url = url + "/mqtt/"+json_data["uuid"]+"/response"
         response = requests.put(response_url, json=json_value)
 
-    elif (msg.topic == "device_id/telemetry"):
+    elif (msg.topic == "telemetry"):
         json_data = json.loads(msg.payload.decode("utf-8"))
         json_value = makeJsonData(json_data, sec_key)
 
@@ -75,8 +75,8 @@ client.on_subscribe = on_subscribe
 client.on_message = on_message
 
 client.connect("mosquitto", 1883)
-client.subscribe("device_id/telemetry", 1)
-client.subscribe("device_id/response", 1)
+client.subscribe("telemetry", 1)
+client.subscribe("response", 1)
 client.loop_forever()
 
 # function
