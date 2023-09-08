@@ -32,3 +32,7 @@ async def put (id:int, payload=${schema_model}):
 async def delete(id:int):
     query = ${table_name}.delete().where(id == ${table_name}.c.id)
     return await database.execute(query=query)
+
+async def get_num(num: int):
+    query = ${table_name}.select().order_by(${table_name}.c.created_at.desc()).limit(num)
+    return await database.fetch_all(query=query)

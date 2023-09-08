@@ -54,3 +54,8 @@ async def put_by_id(id: int, payload: mqtt_model):
 async def delete(id: int):
     query = mqtt_table.delete().where(id == mqtt_table.c.id)
     return await database.execute(query=query)
+
+
+async def get_num(num: int):
+    query = mqtt_table.select().order_by(mqtt_table.c.created_at.desc()).limit(num)
+    return await database.fetch_all(query=query)

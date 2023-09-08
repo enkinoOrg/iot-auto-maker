@@ -74,3 +74,7 @@ async def delete_schema_by_id(id: int):
         raise HTTPException(status_code=404, detail="Not found")
     await crud.delete(id)
     return schema
+
+@ router.get("/num/{num}", response_model=List[mqtt_db])
+async def read_schema_by_num(num: int):
+    return await crud.get_num(num)
