@@ -12,3 +12,7 @@ client.on('connect', () => {
   client.publish(topic, mqttMessage);
   client.end();
 });
+
+client.on('error', (error) => {
+  console.log("Can't connect" + error);
+});

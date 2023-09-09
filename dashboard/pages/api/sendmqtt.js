@@ -1,15 +1,18 @@
-import axios from 'axios'
+import axios from 'axios';
 
-const mqtt = require('mqtt')
+const mqtt = require('mqtt');
+let mqttClient = null; // mqtt client 상태를 저장하는 변수
 
 export const fetchTable100Data = async () => {
   try {
-    const res = await axios.get('http://192.168.219.103:8000/table/get_num/100/')
-    return res
+    const res = await axios.get(
+      'http://192.168.219.103:8000/table/get_num/100/'
+    );
+    return res;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
+};
 
 /**
  * {
@@ -21,33 +24,33 @@ export const fetchTable100Data = async () => {
  * @returns 
  */
 
-export const insertMqttCommandData = async mqttData => {
+export const insertMqttCommandData = async (mqttData) => {
   try {
-    const res = await axios.post('http://192.168.219.103:8000/mqtt/', mqttData)
-    console.log(res)
+    const res = await axios.post('http://192.168.219.103:8000/mqtt/', mqttData);
+    console.log(res);
 
-    return res
+    return res;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
-
-const options = {
-  host: '192.168.219.103',
-  port: 8080,
-  protocol: 'ws'
-  // username:"",
-  // password:"",
-}
+};
 
 // mqtt 서버로 보내는 코드
 export const sendMqttMessage = (topic, mqttMessage) => {
-  const client = mqtt.connect('mqtt://192.168.219.103')
-  console.log(mqttMessage)
+  // mqtt client 없으면 생성 후 바로 publish
+  if (mqttClient === null) {
+    mqttClient = mqtt.connect('ws://192.168.219.103:8080');
+    mqttClient.on('connect', () => {
+      console.log('connected' + mqttClient.connected);
+      mqttClient.publish(topic, mqttMessage);
+    });
 
-  client.on('connect', () => {
-    console.log('connected' + client.connected)
-    client.publish(topic, mqttMessage)
-    client.end()
-  })
-}
+    mqttClient.on('error', (error) => {
+      console.log("Can't connect" + error);
+    });
+  } else {
+    // 클라이언트가 있으면 바로 publish
+    mqttClient.publish(topic, mqttMessage);
+  }
+  console.log(mqttMessage);
+};
