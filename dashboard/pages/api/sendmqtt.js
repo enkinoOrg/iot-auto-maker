@@ -14,6 +14,15 @@ export const fetchTable100Data = async () => {
   }
 };
 
+export const fetchTableOneData = async () => {
+  try {
+    const res = await axios.get('http://192.168.219.103:8000/table/get_num/1/');
+    return res;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 /**
  * {
   "uuid": "string",

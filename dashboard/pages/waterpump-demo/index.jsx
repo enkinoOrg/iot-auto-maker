@@ -38,7 +38,7 @@ const data = {
   datasets: sensorDatasets,
 };
 
-export default function Home() {
+export default function WaterpumpDemo() {
   const [isRelay, setIsRelay] = useState(0);
   const [tableData, setTableData] = useState(data);
 
