@@ -15,7 +15,12 @@ const Home = () => {
           <Link href={'flight-demo'}>{`자이로 데모`}</Link>
         </h1>
       </div>
-
+      {/* 
+      <div className='info'>
+        <h1>
+          <Link href={'airplane'}>{`비행기`}</Link>
+        </h1>
+      </div> */}
       <style jsx>{`
         .container {
           min-height: 100vh;
@@ -46,8 +51,17 @@ const Home = () => {
         body {
           padding: 0;
           margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+          font-family:
+            -apple-system,
+            BlinkMacSystemFont,
+            Segoe UI,
+            Roboto,
+            Oxygen,
+            Ubuntu,
+            Cantarell,
+            Fira Sans,
+            Droid Sans,
+            Helvetica Neue,
             sans-serif;
         }
 
