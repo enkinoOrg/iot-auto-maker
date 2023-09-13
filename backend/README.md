@@ -1,6 +1,8 @@
 # IOT AUTO MAKER
 
 ### 폴더 구조
+```
+.
 ├── README.md
 ├── build : 생성된 코드
 │   └── postgresql
@@ -26,6 +28,7 @@
 │       ├── requirements.txt
 │       └── subscribe.py
 └── requirements.txt
+```
 
 ### 실행
 ```
