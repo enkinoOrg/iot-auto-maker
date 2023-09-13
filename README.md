@@ -31,3 +31,20 @@
 ```
 ### 시스템 구조도
 ![시스템 구조도](documents/images/2023_공개SW-GCP.jpg)
+
+### 실행
+
+나의 프로젝트에서 생성을 원하는 프로젝트 선택
+![나의 프로젝트](documents/images/my_project1.jpg)
+
+프로젝트 보기에서 선택한 프로젝트의 json 파일 보기를 통해 json 파일 복사
+
+![json 파일 열기](documents/images/my_project_json.jpg)
+
+```
+python -m venv .venv // 가상환경 생성
+source .venv/bin/activate // 가상환경 적용
+pip install -r requirements.txt
+python main.py "json파일 위치 혹은 json파일의 url"
+```
+/backend/build에 폴더 생성
