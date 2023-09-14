@@ -4,7 +4,7 @@ services:
   db:
     image: postgres:13.1-alpine
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - ./postgres_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=${POSTGRESQL_ROOT_USER}
       - POSTGRES_PASSWORD=${POSTGRESQL_ROOT_PASSWORD}
