@@ -17,7 +17,7 @@ function App({ angle_x, angle_y }) {
       <PerspectiveCamera makeDefault position={[0, 10, 10]} />
       <Landscape />
       <Airplane angle_x={angle_x} angle_y={angle_y} />
-      <Targets />
+      {/* <Targets /> */}
       <directionalLight
         castShadow
         color={'#f3d29a'}
