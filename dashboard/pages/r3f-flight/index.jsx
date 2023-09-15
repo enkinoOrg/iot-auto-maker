@@ -45,8 +45,8 @@ function R3FFlight() {
   }, [mqttClientReady]);
 
   return (
-    <div>
-      <Canvas shadows id='root'>
+    <div style={{ width: '100vw', height: '100vh' }}>
+      <Canvas shadows>
         <Suspense fallback={null}>
           <App
             angle_x={jsonData?.angle_x || 0}

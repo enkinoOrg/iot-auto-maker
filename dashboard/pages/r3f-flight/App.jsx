@@ -33,14 +33,14 @@ function App({ angle_x, angle_y }) {
         shadow-camera-left={-6.2}
         shadow-camera-right={6.4}
       />
-      <EffectComposer>
+      {/* <EffectComposer>
         <MotionBlur />
         <HueSaturation
           blendFunction={BlendFunction.NORMAL} // blend mode
           hue={-0.15} // hue in radians
           saturation={0.1} // saturation in radians
         />
-      </EffectComposer>
+      </EffectComposer> */}
     </>
   );
 }
