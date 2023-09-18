@@ -43,6 +43,7 @@
 ![json 파일 열기](documents/images/my_project_json.jpg)
 
 ```
+## window os에서는 shell을 관리자 권한으로 실행해야 함
 - python -m venv .venv // 가상환경 생성
 - source .venv/bin/activate // 가상환경 적용
 - pip install -r requirements.txt

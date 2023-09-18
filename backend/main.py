@@ -92,6 +92,26 @@ def update_crud_content(table_list):
         content += f'{table["data_name"]}=payload.{table["data_name"]},\n\t\t\t'
     return content
 
+def create_sensor_content(sensor_list):
+    content = ''
+    for sensor in sensor_list:
+        content += f'int {sensor["data_name"].upper()}_PIN = d1\n'
+    return content
+
+def create_relay_content(sensor_list):
+    content = ''
+    for sensor in sensor_list:
+        content += f'int {sensor["data_name"].upper()}_PIN = d0\n'
+    return content
+
+
+def copy_arduino_main_file(sensor_list, relay_list):
+    copy_file_content('arduino/DHT11_WATER_RELAY_OLED.ino', 'build/arduino/main.ino')
+    sensor_content = create_sensor_content(sensor_list)
+    relay_content = create_relay_content(relay_list)
+    replace_word_in_file('build/arduino/main.ino', '${sensor}', sensor_content)
+    replace_word_in_file('build/arduino/main.ino', '${relay}', relay_content)
+
 def main(url):
     # read json file in json directory
 
@@ -122,7 +142,7 @@ def main(url):
     table_list = project_field
     print("schema_model : ", schema_model)
     print("schema_db : ", schema_db)
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
     copy_folder('postgresql', 'build/postgresql')
     print("=== copy folder end ===")
     copy_main_file(table_name)
@@ -140,6 +160,25 @@ def main(url):
 
     # mqtt 복사
     make_mqtt_subscribe_file(sec_key, table_id, table_name)
+          
+    print("=== copy arduino start ===")
+    copy_folder('arduino', 'build/arduino')
+
+    sensor_list = []
+    relay_list = []
+
+    for field in project_field:
+        if field['is_relay']:
+            relay_list.append(field)
+        elif field['is_relay'] == False:
+            sensor_list.append(field)
+
+    print("sensor_list: ", sensor_list)
+    print("relay_list: ", relay_list)
+    copy_arduino_main_file(sensor_list, relay_list)
+
+
 
 if __name__ == '__main__':
     main(sys.argv[1])
+
