@@ -101,16 +101,43 @@ def create_sensor_content(sensor_list):
 def create_relay_content(sensor_list):
     content = ''
     for sensor in sensor_list:
+        content += f'int {sensor["data_name"]} = 0\n'
+    return content
+
+def create_relay_pin_content(sensor_list):
+    content = ''
+    for sensor in sensor_list:
         content += f'int {sensor["data_name"].upper()}_PIN = d0\n'
     return content
 
+def relay_control(relay_list):
+    content = ''
+    func_content = 'if (strcmp(relay_name,"${RELAY}")==0) {\n'+'\t\t${RELAY} = relay_value;\n'+'\t\tif (${RELAY}==1)\n'+'\t\t\tdigitalWrite(${RELAY_PIN}, HIGH);\n'+'\t\telse if (${RELAY}==0)\n'+'\t\t\tdigitalWrite(${RELAY_PIN}, LOW);\n'+'\t}\n'
+    
+    for relay in relay_list:
+        # copy func_content to content2
+        relay_name = relay['data_name']
+        relay_name_upper = relay_name.upper()
+        print(relay_name_upper)
+        content2 = func_content
+        content2 = content2.replace('${RELAY}', relay_name)
+        content2 = content2.replace('${RELAY_PIN}', relay_name_upper+'_PIN')
+        content+=content2
+
+    return content
 
 def copy_arduino_main_file(sensor_list, relay_list):
     copy_file_content('arduino/DHT11_WATER_RELAY_OLED.ino', 'build/arduino/main.ino')
     sensor_content = create_sensor_content(sensor_list)
     relay_content = create_relay_content(relay_list)
+    relay_pin_content = create_relay_pin_content(relay_list)
+    relay_control_content = relay_control(relay_list)
+    print("raly_control_content: ", relay_control_content)
     replace_word_in_file('build/arduino/main.ino', '${sensor}', sensor_content)
     replace_word_in_file('build/arduino/main.ino', '${relay}', relay_content)
+    replace_word_in_file('build/arduino/main.ino', '${relay_pin}', relay_pin_content)
+    replace_word_in_file('build/arduino/main.ino', '${relay_control}', relay_control_content)
+
 
 def main(url):
     # read json file in json directory

@@ -1,0 +1,56 @@
+{
+  "project_id": 126,
+  "created_at": "2023-09-07T01:37:04.592+00:00",
+  "category": "에너지",
+  "count": 0,
+  "description": "수분이 없을 경우 자동으로 워터펌프를 작동시켜 급수하는 프로그램입니다",
+  "project_name": "화분 물주기 워터펌프",
+  "project_field": [
+    {
+      "data_name": "temperature",
+      "data_type": "int",
+      "data_description": "온도",
+      "is_relay": false,
+      "project_id": null,
+      "created_at": null
+    },
+    {
+      "data_name": "humidity",
+      "data_type": "int",
+      "data_description": "습도",
+      "is_relay": false,
+      "project_id": null,
+      "created_at": null
+    },
+    {
+      "data_name": "moisture",
+      "data_type": "int",
+      "data_description": "수분퍼센트",
+      "is_relay": false,
+      "project_id": null,
+      "created_at": null
+    },
+    {
+      "data_name": "water_pump",
+      "data_type": "int",
+      "data_description": "워터펌프의 현재상태 및 릴레이",
+      "is_relay": true,
+      "project_id": null,
+      "created_at": null
+    },
+    {
+      "data_name": "fan",
+      "data_type": "int",
+      "data_description": "환풍기",
+      "is_relay": true,
+      "project_id": null,
+      "created_at": null
+    }
+  ],
+  "table_name": "table",
+  "user_id": "79MrKrittahdO6VGiozuZgoVLv62",
+  "user_name": "문현정",
+  "is_template": false,
+  "updated_at": "2023-09-07T01:37:04.592+00:00",
+  "json_url": null
+}

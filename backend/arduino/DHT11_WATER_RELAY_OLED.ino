@@ -37,7 +37,10 @@ ${sensor}
 // 릴레이
 // int RELAY_PIN = D7;
 // int water_pump = 0;
+${relay_pin}
 ${relay}
+
+
 
 // MQTT
 ESP8266WiFiClass Wifi8266; // 맥 어드레스는 얻기 위함
@@ -99,15 +102,17 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.println(relay_value);
   Serial.println(strcmp(relay_name,"water_pump"));
 
-  if (strcmp(relay_name,"water_pump")==0) { // 일치하면
-    water_pump = relay_value;
-    if (water_pump==1)
-      digitalWrite(RELAY_PIN, HIGH);
-    else if (water_pump==0)
-      digitalWrite(RELAY_PIN, LOW);
+  ${relay_control}
 
-    // 결과 리턴
-  }
+//   if (strcmp(relay_name,"water_pump")==0) { // 일치하면
+//     water_pump = relay_value;
+//     if (water_pump==1)
+//       digitalWrite(RELAY_PIN, HIGH);
+//     else if (water_pump==0)
+//       digitalWrite(RELAY_PIN, LOW);
+
+//     // 결과 리턴
+//   }
 
 }
 
