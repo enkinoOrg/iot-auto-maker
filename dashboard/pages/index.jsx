@@ -12,15 +12,9 @@ const Home = () => {
 
       <div className='info'>
         <h1>
-          <Link href={'flight-demo'}>{`자이로 데모`}</Link>
+          <Link href={'r3f-flight'}>{`자이로 비행기 데모`}</Link>
         </h1>
       </div>
-      {/* 
-      <div className='info'>
-        <h1>
-          <Link href={'airplane'}>{`비행기`}</Link>
-        </h1>
-      </div> */}
       <style jsx>{`
         .container {
           min-height: 100vh;
