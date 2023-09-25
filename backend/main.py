@@ -161,7 +161,7 @@ def main(url):
         sec_key.append(project_field[i]['data_name'])
 
     table_id = sec_key.pop(0)
-    table_name = data['table_name']
+    table_name = 'telemetry'
 
     schema_model = table_name + "_model"
     schema_db = table_name + "_db"

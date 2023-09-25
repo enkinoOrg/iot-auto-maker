@@ -15,8 +15,8 @@ DATABASE_URL = os.environ.get("DATABASE_URL")
 #sqlalchemy
 engine = create_engine(DATABASE_URL)
 metadata = MetaData()
-schema_name = Table(
-    "schema_name",
+telemetry = Table(
+    "telemetry",
     metadata,
     Column("id", Integer, primary_key=True),
     # table 내용
@@ -25,8 +25,8 @@ schema_name = Table(
            default=dt.now(tz("Asia/Seoul")))
 )
 
-mqtt_table = Table(
-    "mqtt_table",
+mqtt_relay = Table(
+    "mqtt_relay",
     metadata,
     Column("id", Integer, primary_key=True),
     Column("uuid", String),
