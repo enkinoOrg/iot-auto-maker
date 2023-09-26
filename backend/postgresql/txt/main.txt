@@ -1,11 +1,16 @@
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from app.api import routers
 from app.mqtt_api import mqtt_routers
-from app.db import engine, metadata, database
+from app.db import metadata, database
 
-metadata.create_all(engine)
+from sqlalchemy import create_engine
+import time
+load_dotenv()
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 app = FastAPI()
 
@@ -26,7 +31,10 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup():
+    time.sleep(20)
     await database.connect()
+    engine = create_engine(DATABASE_URL)
+    metadata.create_all(engine)
 
 
 @app.on_event("shutdown")

@@ -13,7 +13,6 @@ load_dotenv()
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 #sqlalchemy
-engine = create_engine(DATABASE_URL)
 metadata = MetaData()
 telemetry = Table(
     "telemetry",
