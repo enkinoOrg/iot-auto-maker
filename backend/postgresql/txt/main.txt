@@ -31,10 +31,23 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup():
-    time.sleep(20)
-    await database.connect()
-    engine = create_engine(DATABASE_URL)
-    metadata.create_all(engine)
+    engine = None
+    while engine is None:
+        try:
+            time.sleep(1)
+            print("connect start")
+            await database.connect()
+            engine = create_engine(DATABASE_URL)
+            metadata.create_all(engine)
+        except Exception as e:
+            print(e)
+            time.sleep(1)
+            continue
+
+    # time.sleep(20)
+    # await database.connect()
+    # engine = create_engine(DATABASE_URL)
+    # metadata.create_all(engine)
 
 
 @app.on_event("shutdown")
