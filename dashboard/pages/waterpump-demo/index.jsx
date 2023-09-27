@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import * as mqtt from 'mqtt'; // import everything inside the mqtt module and give it the namespace "mqtt"
 import LineGraph from '../../components/LineChart';
 import {
   fetchTable100Data,
@@ -39,8 +40,13 @@ const data = {
 };
 
 export default function WaterpumpDemo() {
+  const [autoMode, setAutoMde] = useState(false); // 자동모드 (시험용)
+  const [mqttClientReady, setMqttClientReady] = useState(false);
+  const [jsonData, setJsonData] = useState(null);
   const [isRelay, setIsRelay] = useState(0);
   const [tableData, setTableData] = useState(data);
+  const [isRecording, setIsRecording] = useState(false); // 로그 기록용
+  const [logArray, setLogArray] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
@@ -87,6 +93,8 @@ export default function WaterpumpDemo() {
       }
     };
 
+    // getData();
+
     // 1초마다 getData() 함수를 실행
     const interval = setInterval(() => {
       getData();
@@ -94,6 +102,58 @@ export default function WaterpumpDemo() {
 
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    let mqttClient;
+
+    const setupMqttClient = () => {
+      mqttClient = mqtt.connect('ws://localhost:8080');
+
+      mqttClient.on('connect', () => {
+        // setConnectStatus('Connected');
+        console.error('Connected');
+        mqttClient.subscribe('telemetry');
+      });
+
+      mqttClient.on('error', (err) => {
+        console.error('Connection error: ', err);
+        // setConnectStatus('Connection error: ' + err);
+        mqttClient.unsubscribe('telemetry');
+        mqttClient.end();
+      });
+
+      mqttClient.on('reconnect', () => {
+        console.log('reconnect');
+        // setConnectStatus('Reconnecting');
+      });
+
+      mqttClient.on('message', (topic, message) => {
+        const jsonData = JSON.parse(message);
+        setJsonData({
+          temperature: jsonData['0'],
+          humidity: jsonData['1'],
+          moisture: jsonData['2'],
+          water_pump: jsonData['3'],
+        });
+        if (isRecording) {
+          setLogArray((prevLogs) => [...prevLogs, jsonData]);
+        }
+      });
+    };
+
+    if (mqttClientReady) {
+      setupMqttClient();
+    } else {
+      setMqttClientReady(true); // mqttClient를 생성하기 위해, 상태값 변경
+    }
+
+    return () => {
+      if (mqttClient) {
+        mqttClient.unsubscribe('telemetry');
+        mqttClient.end();
+      }
+    };
+  }, [mqttClientReady, isRecording]);
 
   const onClickHandler = async () => {
     const topic = 'cmd/water1-E8DB84986E61';
@@ -181,8 +241,17 @@ export default function WaterpumpDemo() {
         body {
           padding: 0;
           margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+          font-family:
+            -apple-system,
+            BlinkMacSystemFont,
+            Segoe UI,
+            Roboto,
+            Oxygen,
+            Ubuntu,
+            Cantarell,
+            Fira Sans,
+            Droid Sans,
+            Helvetica Neue,
             sans-serif;
         }
 

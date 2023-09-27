@@ -1,46 +1,44 @@
-import React, { Suspense, useState, useEffect, useRef } from "react";
-import * as mqtt from "mqtt"; // import everything inside the mqtt module and give it the namespace "mqtt"
-import { saveAs } from "file-saver";
-import { Canvas } from "@react-three/fiber";
-import { Html } from "@react-three/drei";
+import React, { Suspense, useState, useEffect, useRef } from 'react';
+import * as mqtt from 'mqtt'; // import everything inside the mqtt module and give it the namespace "mqtt"
+import { saveAs } from 'file-saver';
+import { Canvas } from '@react-three/fiber';
+import { Html } from '@react-three/drei';
 
-import App from "./App.jsx";
+import App from './App.jsx';
 
 // import './index.css';
 
 function R3FFlight() {
   const [mqttClientReady, setMqttClientReady] = useState(false);
-  // const [mqttClient, setMqttClient] = useState(null);
-  const [connectStatus, setConnectStatus] = useState(null);
   const [jsonData, setJsonData] = useState(null);
-  const [isRecording, setIsRecording] = useState(false);
+  const [isRecording, setIsRecording] = useState(false); // 로그 기록
   const [logArray, setLogArray] = useState([]);
 
   useEffect(() => {
     let mqttClient;
 
     const setupMqttClient = () => {
-      mqttClient = mqtt.connect("ws://localhost:8080");
+      mqttClient = mqtt.connect('ws://localhost:8080');
 
-      mqttClient.on("connect", () => {
-        setConnectStatus("Connected");
-        mqttClient.subscribe("telemetry");
+      mqttClient.on('connect', () => {
+        // setConnectStatus('Connected');
+        mqttClient.subscribe('telemetry');
       });
 
-      mqttClient.on("error", (err) => {
-        console.error("Connection error: ", err);
-        setConnectStatus("Connection error: " + err);
-        mqttClient.unsubscribe("telemetry");
+      mqttClient.on('error', (err) => {
+        console.error('Connection error: ', err);
+        setConnectStatus('Connection error: ' + err);
+        mqttClient.unsubscribe('telemetry');
         mqttClient.end();
       });
 
-      mqttClient.on("reconnect", () => {
-        setConnectStatus("Reconnecting");
+      mqttClient.on('reconnect', () => {
+        setConnectStatus('Reconnecting');
       });
 
-      mqttClient.on("message", (topic, message) => {
+      mqttClient.on('message', (topic, message) => {
         const jsonData = JSON.parse(message);
-        setJsonData({ angle_x: jsonData["0"], angle_y: jsonData["1"] });
+        setJsonData({ angle_x: jsonData['0'], angle_y: jsonData['1'] });
         if (isRecording) {
           setLogArray((prevLogs) => [...prevLogs, jsonData]);
         }
@@ -50,12 +48,12 @@ function R3FFlight() {
     if (mqttClientReady) {
       setupMqttClient();
     } else {
-      setMqttClientReady(true);
+      setMqttClientReady(true); // mqttClient를 생성하기 위해, 상태값 변경
     }
 
     return () => {
       if (mqttClient) {
-        mqttClient.unsubscribe("telemetry");
+        mqttClient.unsubscribe('telemetry');
         mqttClient.end();
       }
     };
@@ -76,60 +74,60 @@ function R3FFlight() {
 
   function objectsToCSV(objects) {
     if (objects.length === 0) {
-      return "";
+      return '';
     }
 
     const header = Object.keys(objects[0]);
     const csvRows = [];
 
-    csvRows.push(header.join(","));
+    csvRows.push(header.join(','));
 
     objects.forEach((object) => {
       const values = header.map((key) => {
         const value = object[key];
         return `"${value}"`;
       });
-      csvRows.push(values.join(","));
+      csvRows.push(values.join(','));
     });
 
-    const csvString = csvRows.join("\n");
+    const csvString = csvRows.join('\n');
 
     return csvString;
   }
 
   const downloadCSV = () => {
     if (logArray.length === 0) {
-      alert("다운로드할 데이터가 없습니다.");
+      alert('다운로드할 데이터가 없습니다.');
       return;
     }
 
     const csvData = objectsToCSV(logArray);
 
-    const blob = new Blob([csvData], { type: "text/csv" });
-    saveAs(blob, "mqtt_data.csv");
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    saveAs(blob, 'mqtt_data.csv');
   };
 
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
+    <div style={{ width: '100vw', height: '100vh' }}>
       <Canvas shadows>
         <Html
           prepend
           calculatePosition={calculatePosition}
           style={{
-            display: "flex",
-            width: "265px",
-            gap: "10px",
-            flexDirection: "column",
-            padding: "10px",
-            backgroundColor: "white",
-            opacity: "0.8",
+            display: 'flex',
+            width: '265px',
+            gap: '10px',
+            flexDirection: 'column',
+            padding: '10px',
+            backgroundColor: 'white',
+            opacity: '0.8',
           }}
         >
           <div
             style={{
-              display: "flex",
-              gap: "15px",
-              flexDirection: "row",
+              display: 'flex',
+              gap: '15px',
+              flexDirection: 'row',
             }}
           >
             <span>angle_x: {jsonData?.angle_x}</span>
@@ -138,9 +136,9 @@ function R3FFlight() {
 
           <div
             style={{
-              display: "flex",
-              gap: "10px",
-              flexDirection: "row",
+              display: 'flex',
+              gap: '10px',
+              flexDirection: 'row',
             }}
           >
             <button onClick={startRecording} disabled={isRecording}>
