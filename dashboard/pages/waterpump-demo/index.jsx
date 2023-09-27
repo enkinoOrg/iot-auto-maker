@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import * as mqtt from 'mqtt'; // import everything inside the mqtt module and give it the namespace "mqtt"
+import { saveAs } from 'file-saver';
 import LineGraph from '../../components/LineChart';
 import {
   fetchTable100Data,
@@ -151,21 +152,18 @@ export default function WaterpumpDemo() {
       mqttClient = mqtt.connect('ws://localhost:8080');
 
       mqttClient.on('connect', () => {
-        // setConnectStatus('Connected');
         console.error('Connected');
         mqttClient.subscribe('telemetry');
       });
 
       mqttClient.on('error', (err) => {
         console.error('Connection error: ', err);
-        // setConnectStatus('Connection error: ' + err);
         mqttClient.unsubscribe('telemetry');
         mqttClient.end();
       });
 
       mqttClient.on('reconnect', () => {
         console.log('reconnect');
-        // setConnectStatus('Reconnecting');
       });
 
       mqttClient.on('message', (topic, message) => {
@@ -179,6 +177,46 @@ export default function WaterpumpDemo() {
         if (isRecording) {
           setLogArray((prevLogs) => [...prevLogs, jsonData]);
         }
+        if (autoMode) {
+          if (jsonData[2] >= 100) {
+            // 오토모드일 때, 수분센서가 100이상이면 펌프를 켠다.
+            console.log('jsonData[2]', jsonData[2], 'water_pump', jsonData[3]);
+            const uuid = uuidv4();
+            const mqttMessage = {
+              uuid,
+              relay_name: 'water_pump',
+              relay_value: 1,
+            };
+
+            const mqttDatabaseData = {
+              uuid,
+              client_id: 'water1-E8DB84986E61',
+              cmd: JSON.stringify(mqttMessage),
+              response: '',
+            };
+            insertMqttCommandData(mqttDatabaseData);
+            sendMqttMessage(topic, JSON.stringify(mqttMessage));
+          } else if (jsonData[2] <= 50) {
+            // 오토모드일 때, 수분센서가 50이하이면 펌프를 끈다
+            console.log('jsonData[2]', jsonData[2], 'water_pump', jsonData[3]);
+            const uuid = uuidv4();
+            const mqttMessage = {
+              uuid,
+              relay_name: 'water_pump',
+              relay_value: 0,
+            };
+
+            const mqttDatabaseData = {
+              uuid,
+              client_id: 'water1-E8DB84986E61',
+              cmd: JSON.stringify(mqttMessage),
+              response: '',
+            };
+            insertMqttCommandData(mqttDatabaseData);
+            sendMqttMessage(topic, JSON.stringify(mqttMessage));
+          }
+        }
+        console.log('Auto Mode:' + autoMode);
       });
     };
 
@@ -194,9 +232,17 @@ export default function WaterpumpDemo() {
         mqttClient.end();
       }
     };
-  }, [mqttClientReady, isRecording]);
+  }, [mqttClientReady, isRecording, autoMode]);
 
-  const onClickHandler = async () => {
+  const onAutomodeOnOffHandler = () => {
+    if (autoMode === false) {
+      setAutoMde(true);
+    } else {
+      setAutoMde(false);
+    }
+  };
+
+  const onManualOnOffHandler = () => {
     const topic = 'cmd/water1-E8DB84986E61';
     if (isRelay === 0) {
       setIsRelay(1);
@@ -235,22 +281,100 @@ export default function WaterpumpDemo() {
     }
   };
 
+  const startRecording = () => {
+    setIsRecording(true);
+    setLogArray([]);
+  };
+
+  const stopRecording = () => {
+    setIsRecording(false);
+  };
+
+  function objectsToCSV(objects) {
+    if (objects.length === 0) {
+      return '';
+    }
+
+    const header = Object.keys(objects[0]);
+    const csvRows = [];
+
+    csvRows.push(header.join(','));
+
+    objects.forEach((object) => {
+      const values = header.map((key) => {
+        const value = object[key];
+        return `"${value}"`;
+      });
+      csvRows.push(values.join(','));
+    });
+
+    const csvString = csvRows.join('\n');
+
+    return csvString;
+  }
+
+  const downloadCSV = () => {
+    if (logArray.length === 0) {
+      alert('다운로드할 데이터가 없습니다.');
+      return;
+    }
+
+    const csvData = objectsToCSV(logArray);
+
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    saveAs(blob, 'waterpump_data.csv');
+  };
+
   return (
     <div className='container'>
-      <div>
-        <div className='info'>
-          {isRelay === 0
-            ? '현재 워터펌프 상태 : OFF'
-            : '현재 워터펌프 상태 : ON '}
-        </div>
-        <div className='info'>
-          <button onClick={onClickHandler}>
-            {isRelay === 0 ? '펌프 켜기 명령 보내기' : '펌프 끄기 명령 보내기'}
+      <div className='command_container'>
+        <div style={{ padding: 2 }}>
+          <button
+            onClick={startRecording}
+            disabled={isRecording}
+            style={{ padding: 2, marginLeft: 4 }}
+          >
+            로그 시작
+          </button>
+          <button
+            onClick={stopRecording}
+            disabled={!isRecording}
+            style={{ padding: 2, marginLeft: 4 }}
+          >
+            로그 중지
+          </button>
+          <button
+            onClick={downloadCSV}
+            disabled={logArray.length === 0 && !isRecording}
+            style={{ padding: 2, marginLeft: 4 }}
+          >
+            로그 다운로드
           </button>
         </div>
+        <div>
+          <div className='info'>
+            {autoMode === false
+              ? '현재 자동모드 상태 : OFF'
+              : '현재 자동모드 상태 : ON '}
+            <button onClick={onAutomodeOnOffHandler}>
+              {autoMode === false ? '자동 모드 켜기' : '자동 모드 끄기'}
+            </button>
+          </div>
+        </div>
+        <div>
+          <div className='info'>
+            {isRelay === 0
+              ? '현재 워터펌프 상태 : OFF'
+              : '현재 워터펌프 상태 : ON '}
+            <button onClick={onManualOnOffHandler}>
+              {isRelay === 0
+                ? '펌프 켜기 명령 수동으로 보내기'
+                : '펌프 끄기 명령 수동으로 보내기'}
+            </button>
+          </div>
+        </div>
       </div>
-
-      <LineGraph tableData={sensorData} />
+      <LineGraph tableData={sensorData} height={400} />
       <LineGraph tableData={relayData} height={200} />
 
       <style jsx>{`
@@ -268,6 +392,11 @@ export default function WaterpumpDemo() {
           flex-direction: column;
           justify-content: center;
           align-items: center;
+        }
+        .command_container {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          grid-auto-rows: minmax(400, auto);
         }
 
         @media (max-width: 900px) {
