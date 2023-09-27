@@ -34,9 +34,35 @@ const sensorDatasets = ['Temperature', 'Humidity', 'Moisture'].map(
   })
 );
 
-const data = {
+const relayDatasets = ['Water Pump'].map((label, index) => ({
+  label,
+  fill: false,
+  lineTension: 0.1,
+  backgroundColor: backgroundColors[index],
+  borderColor: backgroundColors[index],
+  borderCapStyle: 'butt',
+  borderDash: [],
+  borderDashOffset: 0.0,
+  borderJoinStyle: 'miter',
+  pointBorderColor: backgroundColors[index],
+  pointBackgroundColor: '#fff',
+  pointBorderWidth: 1,
+  pointHoverRadius: 5,
+  pointHoverBackgroundColor: backgroundColors[index],
+  pointHoverBorderColor: backgroundColors[index],
+  pointHoverBorderWidth: 2,
+  pointRadius: 1,
+  pointHitRadius: 10,
+  data: [],
+}));
+
+const sensorDataInit = {
   labels,
   datasets: sensorDatasets,
+};
+const relayDataInit = {
+  labels,
+  datasets: relayDatasets,
 };
 
 export default function WaterpumpDemo() {
@@ -44,7 +70,8 @@ export default function WaterpumpDemo() {
   const [mqttClientReady, setMqttClientReady] = useState(false);
   const [jsonData, setJsonData] = useState(null);
   const [isRelay, setIsRelay] = useState(0);
-  const [tableData, setTableData] = useState(data);
+  const [sensorData, setSensorData] = useState(sensorDataInit);
+  const [relayData, setRelayData] = useState(relayDataInit);
   const [isRecording, setIsRecording] = useState(false); // 로그 기록용
   const [logArray, setLogArray] = useState([]);
 
@@ -56,38 +83,52 @@ export default function WaterpumpDemo() {
         const humidityCounts = {};
         const temperatureCounts = {};
         const moistureCounts = {};
+        const relayCounts = {};
         // 100개의 데이터를 가져와서 각각의 시간대별로 데이터를 저장 (리버스 상태)
         for (let i = 0; i < 100; i++) {
           const createdAt = responseData[i].created_at.substring(11, 19); //시간만 가져오기
           temperatureCounts[createdAt] = responseData[i].temperature;
           humidityCounts[createdAt] = responseData[i].humidity;
           moistureCounts[createdAt] = responseData[i].moisture;
+          relayCounts[createdAt] = responseData[i].water_pump;
         }
 
         const labels = Object.keys(humidityCounts);
         const temperatureValues = Object.values(temperatureCounts);
         const humidityValues = Object.values(humidityCounts);
         const moistureValues = Object.values(moistureCounts);
+        const relayValues = Object.values(relayCounts);
 
-        const newData = {
-          ...tableData,
+        const newSensorData = {
+          ...sensorData,
           labels: labels,
           datasets: [
             {
-              ...tableData.datasets[0],
+              ...sensorData.datasets[0],
               data: temperatureValues,
             },
             {
-              ...tableData.datasets[1],
+              ...sensorData.datasets[1],
               data: humidityValues,
             },
             {
-              ...tableData.datasets[2],
+              ...sensorData.datasets[2],
               data: moistureValues,
             },
           ],
         };
-        setTableData(newData);
+        setSensorData(newSensorData);
+        const newRelayData = {
+          ...relayData,
+          labels: labels,
+          datasets: [
+            {
+              ...relayData.datasets[0],
+              data: relayValues,
+            },
+          ],
+        };
+        setRelayData(newRelayData);
       } catch (error) {
         console.error(error);
       }
@@ -209,7 +250,8 @@ export default function WaterpumpDemo() {
         </div>
       </div>
 
-      <LineGraph tableData={tableData} />
+      <LineGraph tableData={sensorData} />
+      <LineGraph tableData={relayData} height={200} />
 
       <style jsx>{`
         .container {
