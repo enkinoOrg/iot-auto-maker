@@ -4,7 +4,7 @@ import { saveAs } from 'file-saver';
 import { Canvas } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 
-import App from './App.jsx';
+import App from '../../components/FlightApp.jsx';
 
 // import './index.css';
 

@@ -1,8 +1,8 @@
-import { useState, useMemo } from "react";
-import { Quaternion, TorusGeometry, Vector3 } from "three";
-import { mergeBufferGeometries } from "three-stdlib";
-import { useFrame } from "@react-three/fiber";
-import { planePosition } from "./Airplane";
+import { useState, useMemo } from 'react';
+import { Quaternion, TorusGeometry, Vector3 } from 'three';
+import { mergeBufferGeometries } from 'three-stdlib';
+import { useFrame } from '@react-three/fiber';
+import { planePosition } from './Airplane';
 
 function randomPoint(scale) {
   return new Vector3(
@@ -14,7 +14,7 @@ function randomPoint(scale) {
 
 const TARGET_RAD = 0.125;
 
-export function Targets() {
+export default function Targets() {
   const [targets, setTargets] = useState(() => {
     const arr = [];
     for (let i = 0; i < 25; i++) {

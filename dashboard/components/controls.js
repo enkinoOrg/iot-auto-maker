@@ -17,7 +17,7 @@ let pitchVelocity = 0;
 let planeSpeed = 0.006;
 export let turbo = 0;
 
-export function updatePlaneAxis(
+export default function updatePlaneAxis(
   x,
   y,
   z,

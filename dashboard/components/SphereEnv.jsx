@@ -1,7 +1,7 @@
 import { useTexture } from '@react-three/drei';
 import { BackSide } from 'three';
 
-export function SphereEnv() {
+export default function SphereEnv() {
   const map = useTexture('assets/textures/envmap.jpg');
 
   return (

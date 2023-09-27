@@ -52,7 +52,9 @@ class MotionBlurImpl extends Effect {
 }
 
 // Effect component
-export const MotionBlur = forwardRef(({}, ref) => {
+const MotionBlur = forwardRef(({}, ref) => {
   const effect = useMemo(() => new MotionBlurImpl(), []);
   return <primitive ref={ref} object={effect} dispose={null} />;
 });
+
+export default MotionBlur;

@@ -167,6 +167,7 @@ export default function WaterpumpDemo() {
       });
 
       mqttClient.on('message', (topic, message) => {
+        const commandTopic = 'cmd/water1-E8DB84986E61';
         const jsonData = JSON.parse(message);
         setJsonData({
           temperature: jsonData['0'],
@@ -178,8 +179,8 @@ export default function WaterpumpDemo() {
           setLogArray((prevLogs) => [...prevLogs, jsonData]);
         }
         if (autoMode) {
-          if (jsonData[2] >= 100) {
-            // 오토모드일 때, 수분센서가 100이상이면 펌프를 켠다.
+          if (jsonData[2] >= 40 && jsonData[3] === 0) {
+            // 오토모드일 때, 수분센서가 100이상이고 펌프가 꺼져 있으면 펌프를 켠다.
             console.log('jsonData[2]', jsonData[2], 'water_pump', jsonData[3]);
             const uuid = uuidv4();
             const mqttMessage = {
@@ -195,9 +196,9 @@ export default function WaterpumpDemo() {
               response: '',
             };
             insertMqttCommandData(mqttDatabaseData);
-            sendMqttMessage(topic, JSON.stringify(mqttMessage));
-          } else if (jsonData[2] <= 50) {
-            // 오토모드일 때, 수분센서가 50이하이면 펌프를 끈다
+            sendMqttMessage(commandTopic, JSON.stringify(mqttMessage));
+          } else if (jsonData[2] <= 10 && jsonData[3] === 1) {
+            // 오토모드일 때, 수분센서가 50이하이고 펌프가 켜져 있으면 펌프를 끈다
             console.log('jsonData[2]', jsonData[2], 'water_pump', jsonData[3]);
             const uuid = uuidv4();
             const mqttMessage = {
@@ -213,7 +214,7 @@ export default function WaterpumpDemo() {
               response: '',
             };
             insertMqttCommandData(mqttDatabaseData);
-            sendMqttMessage(topic, JSON.stringify(mqttMessage));
+            sendMqttMessage(commandTopic, JSON.stringify(mqttMessage));
           }
         }
         console.log('Auto Mode:' + autoMode);
@@ -243,7 +244,7 @@ export default function WaterpumpDemo() {
   };
 
   const onManualOnOffHandler = () => {
-    const topic = 'cmd/water1-E8DB84986E61';
+    const commandTopic = 'cmd/water1-E8DB84986E61';
     if (isRelay === 0) {
       setIsRelay(1);
       const uuid = uuidv4();
@@ -260,7 +261,7 @@ export default function WaterpumpDemo() {
         response: '',
       };
       insertMqttCommandData(mqttDatabaseData);
-      sendMqttMessage(topic, JSON.stringify(mqttMessage));
+      sendMqttMessage(commandTopic, JSON.stringify(mqttMessage));
     } else {
       setIsRelay(0);
       const uuid = uuidv4();
