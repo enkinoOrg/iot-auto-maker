@@ -175,11 +175,12 @@ export default function WaterpumpDemo() {
           moisture: jsonData['2'],
           water_pump: jsonData['3'],
         });
+        setIsRelay(jsonData['3']);
         if (isRecording) {
           setLogArray((prevLogs) => [...prevLogs, jsonData]);
         }
         if (autoMode) {
-          if (jsonData[2] >= 40 && jsonData[3] === 0) {
+          if (jsonData[2] >= 100 && jsonData[3] === 0) {
             // 오토모드일 때, 수분센서가 100이상이고 펌프가 꺼져 있으면 펌프를 켠다.
             console.log('jsonData[2]', jsonData[2], 'water_pump', jsonData[3]);
             const uuid = uuidv4();
@@ -197,7 +198,7 @@ export default function WaterpumpDemo() {
             };
             insertMqttCommandData(mqttDatabaseData);
             sendMqttMessage(commandTopic, JSON.stringify(mqttMessage));
-          } else if (jsonData[2] <= 10 && jsonData[3] === 1) {
+          } else if (jsonData[2] <= 50 && jsonData[3] === 1) {
             // 오토모드일 때, 수분센서가 50이하이고 펌프가 켜져 있으면 펌프를 끈다
             console.log('jsonData[2]', jsonData[2], 'water_pump', jsonData[3]);
             const uuid = uuidv4();
@@ -278,7 +279,7 @@ export default function WaterpumpDemo() {
         response: '',
       };
       insertMqttCommandData(mqttDatabaseData);
-      sendMqttMessage(topic, JSON.stringify(mqttMessage));
+      sendMqttMessage(commandTopic, JSON.stringify(mqttMessage));
     }
   };
 
