@@ -1,13 +1,13 @@
 import React from 'react';
 import { PerspectiveCamera, Environment } from '@react-three/drei';
-import { EffectComposer, HueSaturation } from '@react-three/postprocessing';
-import { BlendFunction } from 'postprocessing';
-import { Canvas } from '@react-three/fiber';
-import { Landscape } from './Landscape';
-import { SphereEnv } from './SphereEnv';
-import { Airplane } from './Airplane';
-import { Targets } from './Targets';
-import { MotionBlur } from './MotionBlur';
+// import { EffectComposer, HueSaturation } from '@react-three/postprocessing';
+// import { BlendFunction } from 'postprocessing';
+// import { Canvas } from '@react-three/fiber';
+import Landscape from './Landscape';
+import SphereEnv from './SphereEnv';
+import Airplane from './Airplane';
+// import  Targets  from './Targets';
+// import  MotionBlur  from './MotionBlur';
 
 function App({ angle_x, angle_y }) {
   return (
