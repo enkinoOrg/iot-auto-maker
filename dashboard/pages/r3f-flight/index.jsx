@@ -38,6 +38,7 @@ function R3FFlight() {
 
       mqttClient.on('message', (topic, message) => {
         const jsonData = JSON.parse(message);
+        console.log(jsonData);
         setJsonData({ angle_x: jsonData['0'], angle_y: jsonData['1'] });
         if (isRecording) {
           setLogArray((prevLogs) => [...prevLogs, jsonData]);
