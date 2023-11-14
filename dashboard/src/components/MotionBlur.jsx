@@ -1,9 +1,9 @@
-import React, { forwardRef, useMemo } from 'react';
-import dynamic from 'next/dynamic';
-import { Uniform } from 'three';
-import { Effect } from 'postprocessing';
-// import { turbo } from './controls';
-const turbo = dynamic(() => import('./controls').then((mod) => mod.turbo), {
+import React, { forwardRef, useMemo } from "react";
+import dynamic from "next/dynamic";
+import { Uniform } from "three";
+import { Effect } from "postprocessing";
+
+const turbo = dynamic(() => import("./controls").then((mod) => mod.turbo), {
   ssr: false,
 });
 
@@ -41,13 +41,13 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
 // Effect implementation
 class MotionBlurImpl extends Effect {
   constructor() {
-    super('MotionBlur', fragmentShader, {
-      uniforms: new Map([['strength', new Uniform(0)]]),
+    super("MotionBlur", fragmentShader, {
+      uniforms: new Map([["strength", new Uniform(0)]]),
     });
   }
 
   update(renderer, inputBuffer, deltaTime) {
-    this.uniforms.get('strength').value = turbo;
+    this.uniforms.get("strength").value = turbo;
   }
 }
 
