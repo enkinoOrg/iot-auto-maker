@@ -4,17 +4,11 @@ function easeOutQuad(x) {
 
 export let controls = {};
 
-// window.addEventListener("keydown", (e) => {
-//   controls[e.key.toLowerCase()] = true;
-// });
-// window.addEventListener("keyup", (e) => {
-//   controls[e.key.toLowerCase()] = false;
-// });
-
 let maxVelocity = 0.04;
 let jawVelocity = 0;
 let pitchVelocity = 0;
 let planeSpeed = 0.006;
+
 export let turbo = 0;
 
 export default function updatePlaneAxis(
@@ -38,23 +32,23 @@ export default function updatePlaneAxis(
   jawVelocity -= (0.0025 * angle_y) / 100;
   pitchVelocity += (0.0025 * angle_x) / 100;
 
-  if (controls['a']) {
+  if (controls["a"]) {
     jawVelocity += 0.0025;
   }
 
-  if (controls['d']) {
+  if (controls["d"]) {
     jawVelocity -= 0.0025;
   }
 
-  if (controls['w']) {
+  if (controls["w"]) {
     pitchVelocity -= 0.0025;
   }
 
-  if (controls['s']) {
+  if (controls["s"]) {
     pitchVelocity += 0.0025;
   }
 
-  if (controls['r']) {
+  if (controls["r"]) {
     jawVelocity = 0;
     pitchVelocity = 0;
     turbo = 0;
