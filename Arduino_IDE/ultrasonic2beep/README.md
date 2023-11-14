@@ -1,0 +1,6 @@
+# IOT AUTO MAKER
+
+- CPU : ESP8266 
+
+- 16x2 LCD
+- 
