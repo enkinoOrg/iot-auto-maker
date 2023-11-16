@@ -1,0 +1,10 @@
+from pydantic import BaseModel
+from typing import Optional
+from datetime import datetime
+
+class ${schema_model}(BaseModel):
+model_content
+
+class ${schema_name}(${schema_model}):
+    id: int
+    created_at: Optional[datetime] = None

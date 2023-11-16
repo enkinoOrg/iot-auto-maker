@@ -1,0 +1,38 @@
+# TODO: query 수정
+
+from datetime import datetime
+import pytz as tz
+from app.api.models import ${schema_model}
+from app.db import ${table_name}, database
+
+async def post(payload: ${schema_model}):
+    query = ${table_name}.insert().values(
+        create_content
+        created_at=datetime.now(tz.timezone("Asia/Seoul"))
+    )
+    return await database.execute(query=query)
+
+async def get(id: int):
+    query = ${table_name}.select().where(id == ${table_name}.c.id)
+    return await database.fetch_one(query=query)
+
+async def get_all():
+    query = ${table_name}.select()
+    return await database.fetch_all(query=query)
+
+async def put (id:int, payload=${schema_model}):
+    query = (
+        ${table_name}.update().where(id == ${table_name}.c.id).values(
+            update_content
+        ).returning(${table_name}.c.id)
+    )
+    return await database.execute(query=query)
+    
+
+async def delete(id:int):
+    query = ${table_name}.delete().where(id == ${table_name}.c.id)
+    return await database.execute(query=query)
+
+async def get_num(num: int):
+    query = ${table_name}.select().order_by(${table_name}.c.created_at.desc()).limit(num)
+    return await database.fetch_all(query=query)
