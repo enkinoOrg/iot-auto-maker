@@ -2,8 +2,8 @@ import React from "react";
 
 import dynamic from "next/dynamic";
 
-export default function PowerGuage() {
-  const PowerGuage = dynamic(() => import("react-gauge-component"), {
+export default function VoltageGuage() {
+  const VoltageGuage = dynamic(() => import("react-gauge-component"), {
     ssr: false,
   });
 
@@ -16,7 +16,7 @@ export default function PowerGuage() {
         backgroundColor: "#222",
       }}
     >
-      <PowerGuage
+      <VoltageGuage
         type="semicircle"
         arc={{
           colorArray: ["#00FF15", "#FF2121"],
@@ -39,17 +39,17 @@ export default function PowerGuage() {
         }}
         labels={{
           valueLabel: {
-            formatTextValue: (value) => value + "A",
+            formatTextValue: (value) => value + "V",
             style: { color: "black" },
           },
           tickLabels: {
             type: "outer",
             valueConfig: {
-              formatTextValue: (value) => value + "A",
+              formatTextValue: (value) => value + "V",
             },
           },
         }}
-        value={30}
+        value={25}
       />
     </div>
   );
